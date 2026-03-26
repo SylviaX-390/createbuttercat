@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    [
+      {
+        "tag": "c:butter"
+      },
+      {
+        "tag": "c:foods/butter"
+      }
+    ],
+    {
+      "item": "minecraft:honey_bottle"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "createbuttercat:honey_butter"
+  }
+}

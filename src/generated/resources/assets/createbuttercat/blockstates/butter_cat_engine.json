@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "createbuttercat:block/butter_cat_engine/block",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "createbuttercat:block/butter_cat_engine/block"
+    },
+    "facing=south": {
+      "model": "createbuttercat:block/butter_cat_engine/block",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "createbuttercat:block/butter_cat_engine/block",
+      "y": 270
+    }
+  }
+}

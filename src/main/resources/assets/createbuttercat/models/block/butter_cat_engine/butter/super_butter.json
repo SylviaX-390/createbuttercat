@@ -1,0 +1,7 @@
+{
+	"parent": "createbuttercat:block/butter_cat_engine/butter/butter_big",
+	"textures": {
+		"1": "createbuttercat:block/butter/super_butter",
+		"particle": "createbuttercat:block/butter/super_butter"
+	}
+}

@@ -1,0 +1,66 @@
+{
+  "type": "create:sequenced_assembly",
+  "ingredient": {
+    "item": "createbuttercat:honey_butter"
+  },
+  "results": [
+    {
+      "id": "createbuttercat:super_butter"
+    }
+  ],
+  "sequence": [
+    {
+      "type": "create:deploying",
+      "ingredients": [
+        {
+          "item": "createbuttercat:incomplete_super_butter"
+        },
+        [
+          {
+            "item": "minecraft:chorus_fruit"
+          },
+          {
+            "item": "minecraft:popped_chorus_fruit"
+          }
+        ]
+      ],
+      "results": [
+        {
+          "id": "createbuttercat:incomplete_super_butter"
+        }
+      ]
+    },
+    {
+      "type": "create:deploying",
+      "ingredients": [
+        {
+          "item": "createbuttercat:incomplete_super_butter"
+        },
+        {
+          "item": "minecraft:nether_star"
+        }
+      ],
+      "results": [
+        {
+          "id": "createbuttercat:incomplete_super_butter"
+        }
+      ]
+    },
+    {
+      "type": "create:pressing",
+      "ingredients": [
+        {
+          "item": "createbuttercat:incomplete_super_butter"
+        }
+      ],
+      "results": [
+        {
+          "id": "createbuttercat:incomplete_super_butter"
+        }
+      ]
+    }
+  ],
+  "transitional_item": {
+    "id": "createbuttercat:incomplete_super_butter"
+  }
+}

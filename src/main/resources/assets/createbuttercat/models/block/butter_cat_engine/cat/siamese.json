@@ -1,0 +1,7 @@
+{
+	"parent": "createbuttercat:block/butter_cat_engine/cat/all_black",
+	"textures": {
+		"0": "createbuttercat:block/cat/siamese",
+		"particle": "createbuttercat:block/cat/siamese"
+	}
+}

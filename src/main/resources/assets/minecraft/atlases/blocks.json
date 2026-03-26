@@ -1,0 +1,12 @@
+{
+  "sources": [
+    {
+      "type": "single",
+      "resource": "createbuttercat:fluid/cream_flow"
+    },
+    {
+      "type": "single",
+      "resource": "createbuttercat:fluid/cream_still"
+    }
+  ]
+}

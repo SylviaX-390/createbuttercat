@@ -1,0 +1,23 @@
+{
+  "type": "create:filling",
+  "ingredients": [
+    [
+      {
+        "tag": "c:butter"
+      },
+      {
+        "tag": "c:foods/butter"
+      }
+    ],
+    {
+      "type": "neoforge:single",
+      "amount": 50,
+      "fluid": "create:honey"
+    }
+  ],
+  "results": [
+    {
+      "id": "createbuttercat:honey_butter"
+    }
+  ]
+}
