@@ -69,7 +69,7 @@ public class  ButterCatEngineBlockEntity  extends GeneratingKineticBlockEntity {
             this.overflowCount += butterCount - getMaxButterCount();
             this.butterCount = getMaxButterCount();
         }
-
+        
         updateGeneratedRotation();
     }
     public int getButterCount() {
@@ -171,21 +171,24 @@ public class  ButterCatEngineBlockEntity  extends GeneratingKineticBlockEntity {
     protected void write(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
         super.write(compound, registries, clientPacket);
 
-        compound.putBoolean("infinite",infinite);
-        compound.putBoolean("bread",bread);
-        compound.putInt("cd",cd);
-        compound.putInt("butterCount",butterCount);
+        compound.putBoolean("infinite", infinite);
+        compound.putBoolean("bread", bread);
+        compound.putInt("cd", cd);
+        compound.putInt("butterCount", butterCount);
+        compound.putInt("overflowCount", overflowCount);
 
-        compound.putString("catVariant",catVariant.location().toString());
+        compound.putString("catVariant", catVariant.location().toString());
     }
+
     @Override
     protected void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
         super.read(compound, registries, clientPacket);
 
-        if(compound.contains("infinite")) infinite = compound.getBoolean("infinite");
-        if(compound.contains("bread")) bread = compound.getBoolean("bread");
-        if(compound.contains("cd")) cd = compound.getInt("cd");
-        if(compound.contains("butterCount")) butterCount = compound.getInt("butterCount");
+        if (compound.contains("infinite")) infinite = compound.getBoolean("infinite");
+        if (compound.contains("bread")) bread = compound.getBoolean("bread");
+        if (compound.contains("cd")) cd = compound.getInt("cd");
+        if (compound.contains("butterCount")) butterCount = compound.getInt("butterCount");
+        if (compound.contains("overflowCount")) overflowCount = compound.getInt("overflowCount");
 
         if (compound.contains("catVariant")) catVariant = ResourceKey.create(Registries.CAT_VARIANT, ResourceLocation.parse(compound.getString("catVariant")));
 
