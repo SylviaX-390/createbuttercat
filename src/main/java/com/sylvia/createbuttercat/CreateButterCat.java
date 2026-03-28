@@ -4,7 +4,7 @@ import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.item.ItemDescription;
 import com.simibubi.create.foundation.item.KineticStats;
 import com.simibubi.create.foundation.item.TooltipModifier;
-import com.sylvia.createbuttercat.ponder.ModPonder;
+import com.sylvia.createbuttercat.register.ModPonder;
 import com.sylvia.createbuttercat.register.*;
 import net.createmod.catnip.lang.FontHelper;
 import net.createmod.ponder.foundation.PonderIndex;
@@ -53,7 +53,7 @@ public class CreateButterCat {
 
         NeoForge.EVENT_BUS.register(this);
 
-        modContainer.registerConfig(ModConfig.Type.COMMON,Config.SPEC);
+        modContainer.registerConfig(ModConfig.Type.COMMON,ModConfigs.COMMON_SPEC);
     }
     private void doClientStuff(final FMLClientSetupEvent event) {
         PonderIndex.addPlugin(new ModPonder());

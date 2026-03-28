@@ -1,11 +1,9 @@
-package com.sylvia.createbuttercat.datagen;
+package com.sylvia.createbuttercat.register;
 
 import com.sylvia.createbuttercat.CreateButterCat;
 import com.sylvia.createbuttercat.datagen.other.ModLang;
 import com.sylvia.createbuttercat.datagen.other.ModLangZHCN;
 import com.sylvia.createbuttercat.datagen.recipe.*;
-import com.sylvia.createbuttercat.register.ModItems;
-import com.sylvia.createbuttercat.register.ModPotions;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;

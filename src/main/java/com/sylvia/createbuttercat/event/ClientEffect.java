@@ -21,7 +21,7 @@ public final class ClientEffect{
             EffectType.SUPER_BUTTER, SoundEvents.SLIME_JUMP_SMALL,
             EffectType.BREAD, SoundEvents.CAT_AMBIENT,
             EffectType.CAT, SoundEvents.CAT_AMBIENT,
-            EffectType.FAIL, SoundEvents.CAT_BEG_FOR_FOOD
+            EffectType.FAIL, SoundEvents.CAT_HISS
     );
 
 
@@ -45,6 +45,6 @@ public final class ClientEffect{
         (serverLevel).sendParticles(
                 particle,
                 pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,
-                8, 0.5, 0.5, 0.5, 0.1);
+                5, 0.25, 0.25, 0.25, 0.1);
     }
 }

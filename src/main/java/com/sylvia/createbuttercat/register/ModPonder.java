@@ -1,8 +1,8 @@
-package com.sylvia.createbuttercat.ponder;
+package com.sylvia.createbuttercat.register;
 
 import com.simibubi.create.infrastructure.ponder.AllCreatePonderTags;
 import com.sylvia.createbuttercat.CreateButterCat;
-import com.sylvia.createbuttercat.register.ModBlocks;
+import com.sylvia.createbuttercat.ponder.ModPonderScenes;
 import com.tterrag.registrate.util.entry.ItemProviderEntry;
 import com.tterrag.registrate.util.entry.RegistryEntry;
 import net.createmod.ponder.api.registration.PonderPlugin;

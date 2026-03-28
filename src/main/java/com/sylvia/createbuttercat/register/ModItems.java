@@ -4,6 +4,7 @@ import com.simibubi.create.content.processing.sequenced.SequencedAssemblyItem;
 import com.sylvia.createbuttercat.datagen.other.ModTags;
 import com.tterrag.registrate.util.entry.ItemEntry;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
 
@@ -38,7 +39,8 @@ public class ModItems {
             .properties(p -> p.food(new FoodProperties.Builder()
                     .nutrition(18)
                     .saturationModifier(0.5F)
-                    .effect(()->new MobEffectInstance(ModEffects.BUTTER_ROTATION_EFFECT,100,1),1)
+                    .effect(()->new MobEffectInstance(ModEffects.BUTTER_ROTATION_EFFECT,90,1),1)
+                            .effect(()->new MobEffectInstance(MobEffects.LEVITATION,90,0),1)
                     .build())
                     .component(ModDataComponents.BUTTER_LEVEL, 5)
             )

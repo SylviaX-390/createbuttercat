@@ -7,6 +7,7 @@ import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour
 import com.simibubi.create.foundation.blockEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.blockEntity.behaviour.scrollValue.ScrollOptionBehaviour;
 import com.simibubi.create.foundation.utility.CreateLang;
+import com.sylvia.createbuttercat.register.ModConfigs;
 import com.sylvia.createbuttercat.register.ModPartialModels;
 import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import dev.engine_room.flywheel.lib.transform.TransformStack;
@@ -46,7 +47,6 @@ public class  ButterCatEngineBlockEntity  extends GeneratingKineticBlockEntity {
     protected int cd = 0;
     protected float angle = 0;
     protected Cat cat;
-    public static final int MAX_COUNT = 64;
 
     public ButterCatEngineBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
@@ -65,7 +65,7 @@ public class  ButterCatEngineBlockEntity  extends GeneratingKineticBlockEntity {
     public void addButterCount(int count) {
         this.butterCount += count;
         if (this.butterCount < 0) this.butterCount = 0;
-        if (this.butterCount > MAX_COUNT) this.butterCount = MAX_COUNT;
+        if (this.butterCount > getMaxButterCount()) this.butterCount = getMaxButterCount();
         this.usingButterCount = this.butterCount;
         updateGeneratedRotation();
     }
@@ -101,7 +101,7 @@ public class  ButterCatEngineBlockEntity  extends GeneratingKineticBlockEntity {
         bread = bool;
         infinite = bool;
         if(bool)
-            butterCount = MAX_COUNT;
+            butterCount = getMaxButterCount();
         else
             butterCount = 0;
         updateGeneratedRotation();
@@ -111,7 +111,7 @@ public class  ButterCatEngineBlockEntity  extends GeneratingKineticBlockEntity {
         return infinite;
     }
     public boolean isFull() {
-        return butterCount >= MAX_COUNT || isInfinite();
+        return butterCount >= getMaxButterCount() || isInfinite();
     }
 
 
@@ -141,7 +141,7 @@ public class  ButterCatEngineBlockEntity  extends GeneratingKineticBlockEntity {
     @Override
     public float calculateAddedStressCapacity() {
         float capacity = this.usingButterCount * 2;
-        if(isInfinite()) capacity = 576;
+        if(isInfinite()) capacity = getMaxInfiniteOutput();
         this.lastCapacityProvided = capacity;
         return capacity;
     }
@@ -233,5 +233,11 @@ public class  ButterCatEngineBlockEntity  extends GeneratingKineticBlockEntity {
             return direction.getAxis() != facing.getAxis();
         }
 
+    }
+    public static int getMaxButterCount(){
+        return ModConfigs.COMMON.maxButterCount.get();
+    }
+    public static int getMaxInfiniteOutput(){
+        return ModConfigs.COMMON.maxInfiniteOutput.get()/256;
     }
 }

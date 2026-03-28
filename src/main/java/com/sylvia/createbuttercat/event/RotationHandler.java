@@ -13,10 +13,9 @@ import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.RenderFrameEvent;
 
 @EventBusSubscriber(modid = CreateButterCat.MODID, value = Dist.CLIENT)
-public class PlayerRotationHandler {
+public class RotationHandler {
     static float acceleration = 0;
     static int amplifier = -1;
-
     @SubscribeEvent
     public static void onClientTick(ClientTickEvent.Pre event) {
         Player player = Minecraft.getInstance().player;
@@ -47,5 +46,4 @@ public class PlayerRotationHandler {
     private static float getTickAngleSpeed(int amplifier){
         return (3*amplifier+1)* ButterRotationEffect.ROTATION_ANGULAR_SPEED * acceleration;
     }
-
 }

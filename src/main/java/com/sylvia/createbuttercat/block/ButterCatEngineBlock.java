@@ -30,6 +30,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class ButterCatEngineBlock extends HorizontalKineticBlock implements  IBE<ButterCatEngineBlockEntity> {
 
+
     public ButterCatEngineBlock(Properties properties) {
         super(properties);
     }
@@ -52,7 +53,7 @@ public class ButterCatEngineBlock extends HorizontalKineticBlock implements  IBE
     public int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos) {
         if (level.getBlockEntity(pos) instanceof ButterCatEngineBlockEntity be) {
             int butterCount = be.getUsingButterCount();
-            int maxButter = ButterCatEngineBlockEntity.MAX_COUNT;
+            int maxButter = ButterCatEngineBlockEntity.getMaxButterCount();
             int sign = (int) Math.floor((double) butterCount / maxButter * 15);
             if(sign == 0 && butterCount >0)
                 sign = 1;
@@ -64,51 +65,60 @@ public class ButterCatEngineBlock extends HorizontalKineticBlock implements  IBE
 
     @Override
     protected ItemInteractionResult useItemOn(ItemStack itemStack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult result) {
-        if(hand != InteractionHand.MAIN_HAND || itemStack.is(AllItems.WRENCH))return ItemInteractionResult.FAIL;
-        if(player.isCrouching()) return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
-
-        if( level.getBlockEntity(pos) instanceof ButterCatEngineBlockEntity be){
-            if(!be.hasBread()){
-                if(ModTags.matchesIngredient(itemStack,ModTags.getBreads())){
-                    be.addBread();
-                    itemStack.shrink(1);
-                    ClientEffect.create(level,pos, ClientEffect.EffectType.BREAD);
-                    return ItemInteractionResult.SUCCESS;
-                }
-                player.displayClientMessage(Component.translatable("string.createbuttercat.no_bread").withColor(16733525),true);
-                ClientEffect.create(level,pos, ClientEffect.EffectType.FAIL);
-                return ItemInteractionResult.FAIL;
-            }
-
-            if(!be.isInfinite() && itemStack.is(ModItems.SUPER_BUTTER) ){
-                be.setInfinite(true);
-                itemStack.shrink(1);
-                player.displayClientMessage(Component.translatable("string.createbuttercat.infinite").withColor(16733951),true);
-                ClientEffect.create(level,pos, ClientEffect.EffectType.SUPER_BUTTER);
-                return ItemInteractionResult.SUCCESS;
-            }
-
-            if(be.isFull() &&( ModTags.matchesIngredient(itemStack,ModTags.getButters()) ||itemStack.is(ModItems.SUPER_BUTTER))){
-                player.displayClientMessage(Component.translatable("string.createbuttercat.full").withColor(16733525),true);
-                ClientEffect.create(level,pos, ClientEffect.EffectType.FAIL);
-                return ItemInteractionResult.FAIL;
-            }
-
-            if(ModTags.matchesIngredient(itemStack,ModTags.getButters())){
-                int levelCount = itemStack.get(ModDataComponents.BUTTER_LEVEL).intValue();
-                be.addButterCount(levelCount);
-                itemStack.shrink(1);
-                ClientEffect.create(level,pos, ClientEffect.EffectType.BUTTER);
-                return ItemInteractionResult.SUCCESS;
-            }
-
-            if(be.getUsingButterCount() == 0){
-                player.displayClientMessage(Component.translatable("string.createbuttercat.no_butter").withColor(16755200),true);
-                ClientEffect.create(level,pos, ClientEffect.EffectType.FAIL);
-            }
-
+        if (hand != InteractionHand.MAIN_HAND || itemStack.is(AllItems.WRENCH)) {
+            return ItemInteractionResult.FAIL;
         }
-        return super.useItemOn(itemStack, state, level, pos, player, hand, result);
+
+        if (player.isCrouching() || !(level.getBlockEntity(pos) instanceof ButterCatEngineBlockEntity be)) {
+            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        }
+
+        if (!be.hasBread()) {
+            if (ModTags.matchesIngredient(itemStack, ModTags.getBreads())) {
+                be.addBread();
+                itemStack.shrink(1);
+                if (level.isClientSide) {
+                    ClientEffect.create(level, pos, ClientEffect.EffectType.BREAD);
+                }
+                return ItemInteractionResult.SUCCESS;
+            }
+            displayMessage(player, "string.createbuttercat.no_bread", 0xFF5555);
+            return ItemInteractionResult.SUCCESS;
+        }
+
+        if (!be.isInfinite() && itemStack.is(ModItems.SUPER_BUTTER)) {
+            be.setInfinite(true);
+            itemStack.shrink(1);
+            if (level.isClientSide) {
+                ClientEffect.create(level, pos, ClientEffect.EffectType.SUPER_BUTTER);
+            }
+            displayMessage(player, "string.createbuttercat.infinite", 0xFF55FF);
+        }
+
+        if (ModTags.matchesIngredient(itemStack, ModTags.getButters())) {
+            if (be.isFull()) {
+                displayMessage(player, "string.createbuttercat.full", 0xFF5555);
+                return ItemInteractionResult.FAIL;
+            }
+            Integer butterLevel = itemStack.get(ModDataComponents.BUTTER_LEVEL);
+            if (butterLevel != null) {
+                be.addButterCount(butterLevel.intValue());
+                itemStack.shrink(1);
+                if (level.isClientSide) {
+                    ClientEffect.create(level, pos, ClientEffect.EffectType.BUTTER);
+                }
+            }
+        }
+
+        if (be.getUsingButterCount() == 0) {
+            displayMessage(player, "string.createbuttercat.no_butter", 0xFFAA00);
+        }
+
+        return ItemInteractionResult.SUCCESS;
+    }
+
+    private void displayMessage(Player player, String translationKey, int color) {
+        player.displayClientMessage(Component.translatable(translationKey).withColor(color), true);
     }
     public static InteractionResultHolder<ItemStack> armInsert(BlockState state, Level level, BlockPos pos, ItemStack itemStack, boolean simulate) {
         if (!state.hasBlockEntity())
