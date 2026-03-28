@@ -24,5 +24,6 @@
   "string.createbuttercat.full": "奶油已經貼滿了！",
   "string.createbuttercat.infinite": "無限供應",
   "string.createbuttercat.no_bread": "麵包呢？",
-  "string.createbuttercat.no_butter": "奶油呢？"
+  "string.createbuttercat.no_butter": "奶油呢？",
+  "string.createbuttercat.remaining" : "剩餘"
 }
