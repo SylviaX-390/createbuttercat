@@ -52,7 +52,7 @@ public class ButterCatEngineBlock extends HorizontalKineticBlock implements  IBE
     @Override
     public int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos) {
         if (level.getBlockEntity(pos) instanceof ButterCatEngineBlockEntity be) {
-            int butterCount = be.getUsingButterCount();
+            int butterCount = be.getButterCount();
             int maxButter = ButterCatEngineBlockEntity.getMaxButterCount();
             int sign = (int) Math.floor((double) butterCount / maxButter * 15);
             if(sign == 0 && butterCount >0)
@@ -110,7 +110,7 @@ public class ButterCatEngineBlock extends HorizontalKineticBlock implements  IBE
             }
         }
 
-        if (be.getUsingButterCount() == 0) {
+        if (be.getButterCount() == 0) {
             displayMessage(player, "string.createbuttercat.no_butter", 0xFFAA00);
         }
 

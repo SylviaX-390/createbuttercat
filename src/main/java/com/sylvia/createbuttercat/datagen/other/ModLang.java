@@ -36,6 +36,8 @@ public class ModLang extends LanguageProvider {
         add("string.createbuttercat.infinite" , "Infinite Supply");
         add("string.createbuttercat.full" , "Butter is full!");
 
+        add("string.createbuttercat.remaining" , "Remaining");
+
         add("createbuttercat.ponder.butter_cat_engine.header" , "Let the Butter Cat spin around!");
         add("createbuttercat.ponder.butter_cat_engine.text_1" , "Secure the cat to the Shafts with a lead.");
         add("createbuttercat.ponder.butter_cat_engine.text_2" , "This is the Butter Cat engine, Let’s put a slice of bread and some butter on it.");

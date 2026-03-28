@@ -43,7 +43,7 @@ public class  ButterCatEngineBlockEntity  extends GeneratingKineticBlockEntity {
     protected boolean bread =false;
     protected boolean infinite =false;
     protected int butterCount = 0;
-    protected int usingButterCount = 0;
+    protected int overflowCount = 0;
     protected int cd = 0;
     protected float angle = 0;
     protected Cat cat;
@@ -65,14 +65,19 @@ public class  ButterCatEngineBlockEntity  extends GeneratingKineticBlockEntity {
     public void addButterCount(int count) {
         this.butterCount += count;
         if (this.butterCount < 0) this.butterCount = 0;
-        if (this.butterCount > getMaxButterCount()) this.butterCount = getMaxButterCount();
-        this.usingButterCount = this.butterCount;
+        if (this.butterCount > getMaxButterCount()) {
+            this.overflowCount += butterCount - getMaxButterCount();
+            this.butterCount = getMaxButterCount();
+        }
+
         updateGeneratedRotation();
     }
     public int getButterCount() {
         return butterCount;
     }
-    public int getUsingButterCount() {return usingButterCount;}
+    public int getTotalCount() {
+        return butterCount + overflowCount;
+    }
 
     public void setCat(Cat cat) {
         this.cat = cat;
@@ -111,21 +116,28 @@ public class  ButterCatEngineBlockEntity  extends GeneratingKineticBlockEntity {
         return infinite;
     }
     public boolean isFull() {
-        return butterCount >= getMaxButterCount() || isInfinite();
+        return overflowCount !=0 || isInfinite();
     }
 
+    public int getCd(boolean remaining) {
+        return remaining ? 200 - cd : cd;
+    }
 
     public void tick(){
         super.tick();
         angle = ( angle +  getAngularSpeed())% 360;
         if(isInfinite())return;
-        if(butterCount + usingButterCount > 0){
+        if(butterCount > 0){
             cd++;
         }
         if(cd > 200 ){
-            usingButterCount = butterCount;
             if(butterCount > 0) butterCount --;
+            if(overflowCount > 0){
+                butterCount ++;
+                overflowCount--;
+            }
             cd = 0;
+            updateGeneratedRotation();
         }
     }
     ///================ speed ================
@@ -134,13 +146,13 @@ public class  ButterCatEngineBlockEntity  extends GeneratingKineticBlockEntity {
     @Override
     public float getGeneratedSpeed() {
         if (isInfinite()) return 256 * getAngleSpeedDirection() ;
-        int speed = usingButterCount <= 16  ? usingButterCount * 16 : 256;
+        int speed = butterCount <= 16  ? butterCount * 16 : 256;
         return speed * getAngleSpeedDirection();
     }
     //应力系数
     @Override
     public float calculateAddedStressCapacity() {
-        float capacity = this.usingButterCount * 2;
+        float capacity = this.butterCount * 2;
         if(isInfinite()) capacity = getMaxInfiniteOutput();
         this.lastCapacityProvided = capacity;
         return capacity;
@@ -163,7 +175,7 @@ public class  ButterCatEngineBlockEntity  extends GeneratingKineticBlockEntity {
         compound.putBoolean("bread",bread);
         compound.putInt("cd",cd);
         compound.putInt("butterCount",butterCount);
-        compound.putInt("usingButterCount",usingButterCount);
+
         compound.putString("catVariant",catVariant.location().toString());
     }
     @Override
@@ -174,15 +186,15 @@ public class  ButterCatEngineBlockEntity  extends GeneratingKineticBlockEntity {
         if(compound.contains("bread")) bread = compound.getBoolean("bread");
         if(compound.contains("cd")) cd = compound.getInt("cd");
         if(compound.contains("butterCount")) butterCount = compound.getInt("butterCount");
-        if(compound.contains("usingButterCount")) usingButterCount = compound.getInt("usingButterCount");
+
         if (compound.contains("catVariant")) catVariant = ResourceKey.create(Registries.CAT_VARIANT, ResourceLocation.parse(compound.getString("catVariant")));
 
     }
     ///================get models================
     public int getButterLevel(){
-        if(usingButterCount==0) return 0;
-        else if(usingButterCount>8 && usingButterCount<=16) return 2;
-        else if(usingButterCount>16) return 3;
+        if(butterCount==0) return 0;
+        else if(butterCount>8 && butterCount<=16) return 2;
+        else if(butterCount>16) return 3;
         return 1;
     }
     public PartialModel getCatModel() {
@@ -238,6 +250,6 @@ public class  ButterCatEngineBlockEntity  extends GeneratingKineticBlockEntity {
         return ModConfigs.COMMON.maxButterCount.get();
     }
     public static int getMaxInfiniteOutput(){
-        return ModConfigs.COMMON.maxInfiniteOutput.get()/256;
+        return ModConfigs.COMMON.maxInfiniteCapacity.get();
     }
 }

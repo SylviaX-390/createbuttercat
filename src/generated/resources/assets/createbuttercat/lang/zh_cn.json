@@ -24,5 +24,6 @@
   "string.createbuttercat.full": "黄油已经贴满了！",
   "string.createbuttercat.infinite": "无限供应",
   "string.createbuttercat.no_bread": "面包呢？",
-  "string.createbuttercat.no_butter": "黄油呢？"
+  "string.createbuttercat.no_butter": "黄油呢？",
+  "string.createbuttercat.remaining": "剩余"
 }

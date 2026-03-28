@@ -24,5 +24,6 @@
   "string.createbuttercat.full": "Butter is full!",
   "string.createbuttercat.infinite": "Infinite Supply",
   "string.createbuttercat.no_bread": "Where is bread?",
-  "string.createbuttercat.no_butter": "Where is butter?"
+  "string.createbuttercat.no_butter": "Where is butter?",
+  "string.createbuttercat.remaining": "Remaining"
 }
