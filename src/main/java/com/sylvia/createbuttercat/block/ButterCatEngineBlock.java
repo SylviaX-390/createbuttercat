@@ -6,14 +6,13 @@ import com.simibubi.create.foundation.block.IBE;
 import com.sylvia.createbuttercat.datagen.other.ModTags;
 import com.sylvia.createbuttercat.event.ClientEffect;
 import com.sylvia.createbuttercat.register.ModBlockEnetities;
-import com.sylvia.createbuttercat.register.ModDataComponents;
 import com.sylvia.createbuttercat.register.ModItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
@@ -38,39 +37,40 @@ public class ButterCatEngineBlock extends HorizontalKineticBlock implements  IBE
     private static final VoxelShape SHAPE_2 = Shapes.box(.2, .2, 0.0, .8, .8, 1.0);
 
     @Override
-    protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         return switch (state.getValue(HORIZONTAL_FACING)) {
             case NORTH, SOUTH -> SHAPE_2;
             default -> SHAPE_1;
         };
     }
 
+
     @Override
-    protected boolean hasAnalogOutputSignal(BlockState state) {
+    public boolean hasAnalogOutputSignal(BlockState state) {
         return true;
     }
     @Override
     public int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos) {
         if (level.getBlockEntity(pos) instanceof ButterCatEngineBlockEntity be) {
             int butterCount = be.getButterCount();
-            int maxButter = ButterCatEngineBlockEntity.getMaxButterCount();
-            int sign = (int) Math.floor((double) butterCount / maxButter * 15);
-            if(sign == 0 && butterCount >0)
-                sign = 1;
-            return sign;
-
+            int maxButter = be.getMaxButterCount();
+            if(maxButter == 0) return 0;
+            return (int) Math.ceil((double) butterCount / maxButter * 15);
         }
         return 0;
     }
 
+
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack itemStack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult result) {
-        if (hand != InteractionHand.MAIN_HAND || itemStack.is(AllItems.WRENCH)) {
-            return ItemInteractionResult.FAIL;
+    public InteractionResult use(BlockState blockState, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult result) {
+        ItemStack itemStack = player.getItemInHand(hand);
+
+        if (hand != InteractionHand.MAIN_HAND || itemStack.is(AllItems.WRENCH.get())) {
+            return InteractionResult.FAIL;
         }
 
         if (player.isCrouching() || !(level.getBlockEntity(pos) instanceof ButterCatEngineBlockEntity be)) {
-            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+            return InteractionResult.PASS;
         }
 
         if (!be.hasBread()) {
@@ -80,45 +80,44 @@ public class ButterCatEngineBlock extends HorizontalKineticBlock implements  IBE
                 if (level.isClientSide) {
                     ClientEffect.create(level, pos, ClientEffect.EffectType.BREAD);
                 }
-                return ItemInteractionResult.SUCCESS;
+                return InteractionResult.SUCCESS;
             }
-            displayMessage(player, "string.createbuttercat.no_bread", 0xFF5555);
-            return ItemInteractionResult.SUCCESS;
+            displayMessage(player, "string.createbuttercat.no_bread");
+            return InteractionResult.SUCCESS;
         }
 
-        if (!be.isInfinite() && itemStack.is(ModItems.SUPER_BUTTER)) {
+        if (!be.isInfinite() && itemStack.is(ModItems.SUPER_BUTTER.get())) {
             be.setInfinite(true);
             itemStack.shrink(1);
             if (level.isClientSide) {
                 ClientEffect.create(level, pos, ClientEffect.EffectType.SUPER_BUTTER);
             }
-            displayMessage(player, "string.createbuttercat.infinite", 0xFF55FF);
+            displayMessage(player, "string.createbuttercat.infinite");
         }
 
         if (ModTags.matchesIngredient(itemStack, ModTags.getButters())) {
             if (be.isFull()) {
-                displayMessage(player, "string.createbuttercat.full", 0xFF5555);
-                return ItemInteractionResult.FAIL;
+                displayMessage(player, "string.createbuttercat.full");
+                return InteractionResult.FAIL;
             }
-            Integer butterLevel = itemStack.get(ModDataComponents.BUTTER_LEVEL);
-            if (butterLevel != null) {
-                be.addButterCount(butterLevel.intValue());
-                itemStack.shrink(1);
-                if (level.isClientSide) {
-                    ClientEffect.create(level, pos, ClientEffect.EffectType.BUTTER);
-                }
+            int butterLevel = ModItems.getButterLevel(itemStack.getItem());
+            be.addButterCount(butterLevel);
+            itemStack.shrink(1);
+            if (level.isClientSide) {
+                ClientEffect.create(level, pos, ClientEffect.EffectType.BUTTER);
             }
         }
 
         if (be.getButterCount() == 0) {
-            displayMessage(player, "string.createbuttercat.no_butter", 0xFFAA00);
+            displayMessage(player, "string.createbuttercat.no_butter");
         }
 
-        return ItemInteractionResult.SUCCESS;
+        return InteractionResult.SUCCESS;
     }
 
-    private void displayMessage(Player player, String translationKey, int color) {
-        player.displayClientMessage(Component.translatable(translationKey).withColor(color), true);
+
+    private void displayMessage(Player player, String translationKey) {
+        player.displayClientMessage(Component.translatable(translationKey), true);
     }
     public static InteractionResultHolder<ItemStack> armInsert(BlockState state, Level level, BlockPos pos, ItemStack itemStack, boolean simulate) {
         if (!state.hasBlockEntity())
@@ -143,7 +142,7 @@ public class ButterCatEngineBlock extends HorizontalKineticBlock implements  IBE
         }else {
             if ( ModTags.matchesIngredient(itemStack,ModTags.getButters()))
                 butterType = 1;
-            else if (itemStack.is(ModItems.SUPER_BUTTER))
+            else if (itemStack.is(ModItems.SUPER_BUTTER.get()))
                 butterType = 2;
         }
 
@@ -156,7 +155,7 @@ public class ButterCatEngineBlock extends HorizontalKineticBlock implements  IBE
                     blockEntity.addBread();
                 }
                 case 1 -> {
-                    int levelCount = itemStack.get(ModDataComponents.BUTTER_LEVEL).intValue();
+                    int levelCount = ModItems.getButterLevel(itemStack.getItem());
                     blockEntity.addButterCount(levelCount);
                 }
                 case 2 ->  {

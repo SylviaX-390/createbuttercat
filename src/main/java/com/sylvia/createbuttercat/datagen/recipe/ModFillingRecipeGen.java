@@ -4,14 +4,11 @@ import com.simibubi.create.AllFluids;
 import com.simibubi.create.api.data.recipe.FillingRecipeGen;
 import com.sylvia.createbuttercat.datagen.other.ModTags;
 import com.sylvia.createbuttercat.register.ModItems;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 
-import java.util.concurrent.CompletableFuture;
-
 public class ModFillingRecipeGen extends FillingRecipeGen {
-    public ModFillingRecipeGen(PackOutput output, CompletableFuture<HolderLookup.Provider> registries, String defaultNamespace) {
-        super(output, registries, defaultNamespace);
+    public ModFillingRecipeGen(PackOutput output, String defaultNamespace) {
+        super(output , defaultNamespace);
     }
     GeneratedRecipe HONEY_BUTTER = create("honey_butter",b->b
             .require(ModTags.getButters())

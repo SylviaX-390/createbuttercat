@@ -1,4 +1,6 @@
 # 项目排除路径
 /.gradle/
 /build/
+/run/
+/run-data/
 /build/classes/java/main/

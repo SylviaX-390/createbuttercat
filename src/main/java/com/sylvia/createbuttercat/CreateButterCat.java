@@ -4,26 +4,25 @@ import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.item.ItemDescription;
 import com.simibubi.create.foundation.item.KineticStats;
 import com.simibubi.create.foundation.item.TooltipModifier;
-import com.sylvia.createbuttercat.register.ModPonder;
 import com.sylvia.createbuttercat.register.*;
 import net.createmod.catnip.lang.FontHelper;
 import net.createmod.ponder.foundation.PonderIndex;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.ModContainer;
-import net.neoforged.fml.ModList;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.fml.common.Mod;
-import net.neoforged.fml.config.ModConfig;
-import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
-import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.server.ServerStartingEvent;
-import net.neoforged.neoforge.registries.RegisterEvent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.server.ServerStartingEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModList;
+import net.minecraftforge.fml.ModLoadingContext;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.registries.RegisterEvent;
 
 
 @Mod(CreateButterCat.MODID)
@@ -32,29 +31,27 @@ public class CreateButterCat {
 
     public static final CreateRegistrate REGISTRATE = CreateRegistrate.create(MODID);
     static {
-        REGISTRATE.defaultCreativeTab((ResourceKey<CreativeModeTab>)null);
         REGISTRATE.setTooltipModifierFactory(item -> new  ItemDescription.Modifier(item, FontHelper.Palette.STANDARD_CREATE).andThen(TooltipModifier.mapNull(KineticStats.create(item))));
     }
+    @SuppressWarnings("removal")
+    public CreateButterCat() {
+        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
-    public CreateButterCat(IEventBus modEventBus, ModContainer modContainer) {
         modEventBus.addListener(this::commonSetup);
         modEventBus.addListener(this::doClientStuff);
         modEventBus.addListener(this::onRegister);
 
+        ModCreativeModeTabs.register(modEventBus);
         REGISTRATE.registerEventListeners(modEventBus);
-        ModFluids.register();
         ModBlocks.register();
         ModBlockEnetities.register();
         ModItems.register();
-        ModCreativeModeTabs.register(modEventBus);
-        ModDataComponents.register(modEventBus);
+        ModFluids.register();
         ModEffects.register(modEventBus);
         ModPotions.register(modEventBus);
-
-
-        NeoForge.EVENT_BUS.register(this);
-
-        modContainer.registerConfig(ModConfig.Type.COMMON,ModConfigs.COMMON_SPEC);
+        ModPartialModels.init();
+        MinecraftForge.EVENT_BUS.register(this);
+        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON,ModConfigs.COMMON_SPEC);
     }
     private void doClientStuff(final FMLClientSetupEvent event) {
         PonderIndex.addPlugin(new ModPonder());
@@ -70,11 +67,11 @@ public class CreateButterCat {
     public void onServerStarting(ServerStartingEvent event) {
     }
 
-    @EventBusSubscriber(modid = MODID, value = Dist.CLIENT)
+    @Mod.EventBusSubscriber(modid = MODID, value = Dist.CLIENT)
     public static class ClientModEvents {
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event) {
-            ModPartialModels.init();
+
         }
     }
 

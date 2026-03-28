@@ -2,7 +2,9 @@ package com.sylvia.createbuttercat.datagen.other;
 
 import com.sylvia.createbuttercat.CreateButterCat;
 import net.minecraft.data.PackOutput;
-import net.neoforged.neoforge.common.data.LanguageProvider;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.common.data.LanguageProvider;
+import net.minecraftforge.fml.common.Mod;
 
 public class ModLang extends LanguageProvider {
 
@@ -31,12 +33,13 @@ public class ModLang extends LanguageProvider {
 
         add("effect.createbuttercat.rotation" , "Rotation");
 
-        add("string.createbuttercat.no_bread" , "Where is bread?");
-        add("string.createbuttercat.no_butter" , "Where is butter?");
-        add("string.createbuttercat.infinite" , "Infinite Supply");
-        add("string.createbuttercat.full" , "Butter is full!");
+        add("string.createbuttercat.no_bread" , "§cWhere is bread?");
+        add("string.createbuttercat.no_butter" , "§cWhere is butter?");
+        add("string.createbuttercat.infinite" , "§dInfinite Supply");
+        add("string.createbuttercat.full" , "§cButter is full!");
 
         add("string.createbuttercat.remaining" , "Remaining");
+        add("config.jade.plugin_createbuttercat.butter_cat_engine", "Butter Cat Engine Info");
 
         add("createbuttercat.ponder.butter_cat_engine.header" , "Let the Butter Cat spin around!");
         add("createbuttercat.ponder.butter_cat_engine.text_1" , "Secure the cat to the Shafts with a lead.");

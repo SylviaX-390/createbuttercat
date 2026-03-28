@@ -2,7 +2,8 @@
   "required": true,
   "minVersion": "0.8",
   "package": "com.sylvia.createbuttercat.mixin",
-  "compatibilityLevel": "JAVA_21",
+  "compatibilityLevel": "JAVA_8",
+  "refmap": "createbuttercat.refmap.json",
   "mixins": [
   ],
   "client": [

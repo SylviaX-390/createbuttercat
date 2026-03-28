@@ -4,24 +4,26 @@ import com.sylvia.createbuttercat.CreateButterCat;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.item.alchemy.Potion;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.registries.DeferredHolder;
-import net.neoforged.neoforge.registries.DeferredRegister;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.RegistryObject;
+
 
 public class ModPotions {
 
     public static final DeferredRegister<Potion> POTIONS =
             DeferredRegister.create(Registries.POTION, CreateButterCat.MODID);
 
-    public static final DeferredHolder<Potion, Potion> ROTATION =
+    public static final RegistryObject<Potion> ROTATION =
             POTIONS.register("rotation_potion", () -> new Potion(new MobEffectInstance(
-                    ModEffects.BUTTER_ROTATION_EFFECT.getDelegate(),
+                    ModEffects.BUTTER_ROTATION_EFFECT.get(),  // 直接 get()，不需要 getDelegate()
                     1200,
                     2
             )));
-    public static final DeferredHolder<Potion, Potion> SUPER_ROTATION =
+
+    public static final RegistryObject<Potion> SUPER_ROTATION =
             POTIONS.register("super_rotation_potion", () -> new Potion(new MobEffectInstance(
-                    ModEffects.BUTTER_ROTATION_EFFECT.getDelegate(),
+                    ModEffects.BUTTER_ROTATION_EFFECT.get(),
                     3600,
                     4
             )));

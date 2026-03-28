@@ -2,14 +2,14 @@
   "type": "create:compacting",
   "ingredients": [
     {
-      "type": "neoforge:single",
       "amount": 250,
-      "fluid": "createbuttercat:cream"
+      "fluid": "createbuttercat:cream",
+      "nbt": {}
     }
   ],
   "results": [
     {
-      "id": "createbuttercat:butter"
+      "item": "createbuttercat:butter"
     }
   ]
 }

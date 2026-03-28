@@ -1,6 +1,7 @@
 {
   "block.createbuttercat.butter_cat_engine": "Butter Cat Engine",
   "block.createbuttercat.cream": "Cream",
+  "config.jade.plugin_createbuttercat.butter_cat_engine": "Butter Cat Engine Info",
   "createbuttercat.ponder.butter_cat_engine.header": "Let the Butter Cat spin around!",
   "createbuttercat.ponder.butter_cat_engine.text_1": "Secure the cat to the Shafts with a lead.",
   "createbuttercat.ponder.butter_cat_engine.text_2": "This is the Butter Cat engine, Let’s put a slice of bread and some butter on it.",
@@ -21,9 +22,9 @@
   "item.minecraft.splash_potion.effect.rotation_potion": "Rotation Splash Potion",
   "item.minecraft.splash_potion.effect.super_rotation_potion": "Super Rotation Splash Potion",
   "itemGroup.createbuttercat": "Create:Butter Cat",
-  "string.createbuttercat.full": "Butter is full!",
-  "string.createbuttercat.infinite": "Infinite Supply",
-  "string.createbuttercat.no_bread": "Where is bread?",
-  "string.createbuttercat.no_butter": "Where is butter?",
+  "string.createbuttercat.full": "§cButter is full!",
+  "string.createbuttercat.infinite": "§dInfinite Supply",
+  "string.createbuttercat.no_bread": "§cWhere is bread?",
+  "string.createbuttercat.no_butter": "§cWhere is butter?",
   "string.createbuttercat.remaining": "Remaining"
 }

@@ -1,6 +1,5 @@
 {
-	"format_version": "1.21.1",
-	"credit": "Made with Blockbench",
+	"parent": "block/block",
 	"textures": {
 		"particle": "create:block/axis"
 	},

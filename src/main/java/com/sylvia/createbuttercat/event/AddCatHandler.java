@@ -12,16 +12,16 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.AABB;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 
 import java.util.List;
 
 import static com.simibubi.create.content.kinetics.base.HorizontalKineticBlock.HORIZONTAL_FACING;
 
 
-@EventBusSubscriber(modid = CreateButterCat.MODID)
+@Mod.EventBusSubscriber(modid = CreateButterCat.MODID)
 public class AddCatHandler {
     @SubscribeEvent
     public static void addCat(PlayerInteractEvent.RightClickBlock event) {
@@ -32,7 +32,7 @@ public class AddCatHandler {
 
         if (level.isClientSide()|| player.isCrouching()) return;
 
-        if (state.is(AllBlocks.SHAFT)) {
+        if (state.is(AllBlocks.SHAFT.get())) {
             AABB searchBox = player.getBoundingBox().inflate(10);
             List<Cat> leashedCats = player.level().getEntitiesOfClass(
                     Cat.class,
@@ -40,7 +40,7 @@ public class AddCatHandler {
                     cat -> cat.isLeashed() && cat.getLeashHolder() == player
             );
             if (!leashedCats.isEmpty()){
-                replaceBlock(level,player, pos,leashedCats.getFirst());
+                replaceBlock(level,player, pos,leashedCats.get(0));
                 event.setCanceled(true);
             }
 

@@ -1,4 +1,4 @@
-// 1.21.1	2026-03-25T13:40:55.74649	Registrate Provider for createbuttercat [Registries, Data Maps, Recipes, Advancements, Loot Tables, Tags (blocks), Tags (enchantments), Tags (items), Tags (fluids), Tags (entity_types), generic_server_provider, Blockstates, Item models, Lang (en_us/en_ud), generic_client_provider]
+// 1.20.1	2026-03-28T20:54:22.0671764	Registrate Provider for createbuttercat [Recipes, Advancements, Loot Tables, Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), Blockstates, Item models, Lang (en_us/en_ud)]
 d49b884965bc1f437c526def99e51ec3e796a472 assets/createbuttercat/blockstates/butter_cat_engine.json
 36eb786434a30b44f749635d24ca34cc2e2f31b9 assets/createbuttercat/blockstates/cream.json
 13f8c319544a7694112c23f2babfcf3ce014ec42 assets/createbuttercat/lang/en_ud.json
@@ -10,8 +10,7 @@ f89dccf5d2d7164fa32946f8665f5cfdfb26aea8 assets/createbuttercat/models/item/crea
 91d897de17384535de8af07e51369500ecc899da assets/createbuttercat/models/item/honey_butter.json
 0143a08d59db99b8d79562eb4eb914f1b49accd8 assets/createbuttercat/models/item/incomplete_super_butter.json
 c32db45566d0e56589a6ed72244b4025cc5690c5 assets/createbuttercat/models/item/super_butter.json
-ecd4468f7fdb51b98fd0a62b9bdfff04dce5f9e0 data/createbuttercat/loot_table/blocks/butter_cat_engine.json
-b152c3042f276b8be9e0c935fb32a11567b4ef0e data/c/tags/fluid/cream.json
-088c8bf62646d7e4d501a6defde32e5746a0c322 data/c/tags/item/buckets.json
-d8ca4b1e3bc58de89c0051bdb895eabd928b1727 data/c/tags/item/butter.json
-d8ca4b1e3bc58de89c0051bdb895eabd928b1727 data/c/tags/item/foods/butter.json
+ecd4468f7fdb51b98fd0a62b9bdfff04dce5f9e0 data/createbuttercat/loot_tables/blocks/butter_cat_engine.json
+b152c3042f276b8be9e0c935fb32a11567b4ef0e data/c/tags/fluids/cream.json
+d8ca4b1e3bc58de89c0051bdb895eabd928b1727 data/c/tags/items/butter.json
+d8ca4b1e3bc58de89c0051bdb895eabd928b1727 data/c/tags/items/foods/butter.json

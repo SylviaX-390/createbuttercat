@@ -2,7 +2,7 @@ package com.sylvia.createbuttercat.datagen.other;
 
 import com.sylvia.createbuttercat.CreateButterCat;
 import net.minecraft.data.PackOutput;
-import net.neoforged.neoforge.common.data.LanguageProvider;
+import net.minecraftforge.common.data.LanguageProvider;
 
 public class ModLangZHCN extends LanguageProvider {
 
@@ -31,10 +31,10 @@ public class ModLangZHCN extends LanguageProvider {
 
         add("effect.createbuttercat.butter_rotation" , "旋转");
 
-        add("string.createbuttercat.no_bread" , "面包呢？");
-        add("string.createbuttercat.no_butter" , "黄油呢？");
-        add("string.createbuttercat.infinite" , "无限供应");
-        add("string.createbuttercat.full" , "黄油已经贴满了！");
+        add("string.createbuttercat.no_bread" , "§c面包呢？");
+        add("string.createbuttercat.no_butter" , "§c黄油呢？");
+        add("string.createbuttercat.infinite" , "§d无限供应");
+        add("string.createbuttercat.full" , "§c黄油已经贴满了！");
 
         add("string.createbuttercat.remaining" , "剩余");
 

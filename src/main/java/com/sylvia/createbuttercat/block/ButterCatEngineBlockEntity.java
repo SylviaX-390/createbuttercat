@@ -15,7 +15,6 @@ import net.createmod.catnip.math.AngleHelper;
 import net.createmod.catnip.math.VecHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
@@ -66,7 +65,7 @@ public class  ButterCatEngineBlockEntity  extends GeneratingKineticBlockEntity {
         this.butterCount += count;
         if (this.butterCount < 0) this.butterCount = 0;
         if (this.butterCount > getMaxButterCount()) {
-            this.overflowCount += butterCount - getMaxButterCount();
+            this.overflowCount += this.butterCount - getMaxButterCount();
             this.butterCount = getMaxButterCount();
         }
 
@@ -81,13 +80,13 @@ public class  ButterCatEngineBlockEntity  extends GeneratingKineticBlockEntity {
 
     public void setCat(Cat cat) {
         this.cat = cat;
-        this.catVariant = cat.getVariant().getKey();
+        catVariant= BuiltInRegistries.CAT_VARIANT.getResourceKey(cat.getVariant()).get();
     }
 
     public Cat getCat(Level level) {
         if(cat == null) cat =EntityType.CAT.create(level);
-        cat.setVariant(BuiltInRegistries.CAT_VARIANT.getHolder(catVariant).get());
-        cat.setPos(getBlockPos().getBottomCenter());
+        cat.setVariant(BuiltInRegistries.CAT_VARIANT.get(catVariant));
+        cat.setPos(getBlockPos().getCenter());
         Player player = level.getNearestPlayer(cat,6);
         if(player!=null)
             cat.setLeashedTo(player, true);
@@ -168,24 +167,26 @@ public class  ButterCatEngineBlockEntity  extends GeneratingKineticBlockEntity {
     public float getInterpolatedAngle(float partialTicks){return Mth.lerp(partialTicks, angle, angle +getAngularSpeed());}
     ///================serialize================
     @Override
-    protected void write(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
-        super.write(compound, registries, clientPacket);
+    protected void write(CompoundTag compound,boolean clientPacket) {
+        super.write(compound,  clientPacket);
 
         compound.putBoolean("infinite",infinite);
         compound.putBoolean("bread",bread);
         compound.putInt("cd",cd);
         compound.putInt("butterCount",butterCount);
+        compound.putInt("overflowCount",overflowCount);
 
         compound.putString("catVariant",catVariant.location().toString());
     }
     @Override
-    protected void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
-        super.read(compound, registries, clientPacket);
+    protected void read(CompoundTag compound, boolean clientPacket) {
+        super.read(compound,clientPacket);
 
         if(compound.contains("infinite")) infinite = compound.getBoolean("infinite");
         if(compound.contains("bread")) bread = compound.getBoolean("bread");
         if(compound.contains("cd")) cd = compound.getInt("cd");
         if(compound.contains("butterCount")) butterCount = compound.getInt("butterCount");
+        if(compound.contains("overflowCount")) overflowCount = compound.getInt("overflowCount");
 
         if (compound.contains("catVariant")) catVariant = ResourceKey.create(Registries.CAT_VARIANT, ResourceLocation.parse(compound.getString("catVariant")));
 
@@ -246,10 +247,10 @@ public class  ButterCatEngineBlockEntity  extends GeneratingKineticBlockEntity {
         }
 
     }
-    public static int getMaxButterCount(){
+    public int getMaxButterCount(){
         return ModConfigs.COMMON.maxButterCount.get();
     }
-    public static int getMaxInfiniteOutput(){
+    public int getMaxInfiniteOutput(){
         return ModConfigs.COMMON.maxInfiniteCapacity.get();
     }
 }

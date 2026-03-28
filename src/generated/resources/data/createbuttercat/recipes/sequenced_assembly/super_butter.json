@@ -3,9 +3,10 @@
   "ingredient": {
     "item": "createbuttercat:honey_butter"
   },
+  "loops": 1,
   "results": [
     {
-      "id": "createbuttercat:super_butter"
+      "item": "createbuttercat:super_butter"
     }
   ],
   "sequence": [
@@ -26,7 +27,7 @@
       ],
       "results": [
         {
-          "id": "createbuttercat:incomplete_super_butter"
+          "item": "createbuttercat:incomplete_super_butter"
         }
       ]
     },
@@ -42,7 +43,7 @@
       ],
       "results": [
         {
-          "id": "createbuttercat:incomplete_super_butter"
+          "item": "createbuttercat:incomplete_super_butter"
         }
       ]
     },
@@ -55,12 +56,12 @@
       ],
       "results": [
         {
-          "id": "createbuttercat:incomplete_super_butter"
+          "item": "createbuttercat:incomplete_super_butter"
         }
       ]
     }
   ],
-  "transitional_item": {
-    "id": "createbuttercat:incomplete_super_butter"
+  "transitionalItem": {
+    "item": "createbuttercat:incomplete_super_butter"
   }
 }

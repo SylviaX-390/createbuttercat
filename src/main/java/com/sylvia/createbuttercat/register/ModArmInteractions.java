@@ -2,7 +2,6 @@ package com.sylvia.createbuttercat.register;
 
 import com.simibubi.create.api.registry.CreateBuiltInRegistries;
 import com.simibubi.create.content.kinetics.mechanicalArm.AllArmInteractionPointTypes;
-import com.simibubi.create.content.kinetics.mechanicalArm.ArmBlockEntity;
 import com.simibubi.create.content.kinetics.mechanicalArm.ArmInteractionPoint;
 import com.simibubi.create.content.kinetics.mechanicalArm.ArmInteractionPointType;
 import com.sylvia.createbuttercat.CreateButterCat;
@@ -42,8 +41,9 @@ public class ModArmInteractions {
             super(type, level, pos, state);
         }
 
+
         @Override
-        public ItemStack insert(ArmBlockEntity armBlockEntity, ItemStack stack, boolean simulate) {
+        public ItemStack insert(ItemStack stack, boolean simulate) {
             ItemStack input = stack.copy();
             InteractionResultHolder<ItemStack> holder =
                     ButterCatEngineBlock.armInsert(cachedState, level, pos, input, simulate);

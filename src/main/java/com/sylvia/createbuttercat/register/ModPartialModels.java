@@ -3,6 +3,7 @@ package com.sylvia.createbuttercat.register;
 import com.sylvia.createbuttercat.CreateButterCat;
 import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.animal.CatVariant;
 
 import java.util.HashMap;
@@ -43,7 +44,9 @@ public class ModPartialModels {
         CAT_VARIANT_MODEL_MAP.put(CatVariant.JELLIE, BCE_CAT_JELLIE);
         CAT_VARIANT_MODEL_MAP.put(CatVariant.ALL_BLACK, BCE_CAT_ALL_BLACK);
     }
-    public static PartialModel getCatModel(ResourceKey<CatVariant> catVariant) {return CAT_VARIANT_MODEL_MAP.get(catVariant);}
+    public static PartialModel getCatModel(ResourceKey<CatVariant> catVariant) {
+            return CAT_VARIANT_MODEL_MAP.get(catVariant);
+        }
 
     private static PartialModel create(String path) {
         return PartialModel.of(CreateButterCat.rl("block/" + path));

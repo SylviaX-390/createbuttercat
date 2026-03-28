@@ -10,14 +10,14 @@
       }
     ],
     {
-      "type": "neoforge:single",
       "amount": 50,
-      "fluid": "create:honey"
+      "fluid": "create:honey",
+      "nbt": {}
     }
   ],
   "results": [
     {
-      "id": "createbuttercat:honey_butter"
+      "item": "createbuttercat:honey_butter"
     }
   ]
 }

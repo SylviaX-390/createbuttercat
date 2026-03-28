@@ -69,6 +69,7 @@ public class ButterCatEngineVisual extends ShaftVisual<ButterCatEngineBlockEntit
         butter.rotation(dynamicRotation).setChanged();
     }
     private void updateModels() {
+
         PartialModel newCatModel = blockEntity.getCatModel();
         if (newCatModel.hashCode() != catModelCode) {
             catModelCode = newCatModel.hashCode();

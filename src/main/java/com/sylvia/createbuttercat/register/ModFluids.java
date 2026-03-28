@@ -1,11 +1,12 @@
 package com.sylvia.createbuttercat.register;
 
 import com.simibubi.create.AllFluids;
+import com.sylvia.createbuttercat.CreateButterCat;
 import com.sylvia.createbuttercat.datagen.other.ModTags;
 import com.tterrag.registrate.util.entry.FluidEntry;
 import net.createmod.catnip.theme.Color;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.dispenser.BlockSource;
+import net.minecraft.core.BlockSource;
 import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
 import net.minecraft.resources.ResourceLocation;
@@ -18,16 +19,17 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.MapColor;
-import net.neoforged.neoforge.common.Tags;
-import net.neoforged.neoforge.fluids.BaseFlowingFluid;
-import net.neoforged.neoforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.ForgeFlowingFluid;
 import org.joml.Vector3f;
 
 import static com.sylvia.createbuttercat.CreateButterCat.REGISTRATE;
 
 public class ModFluids {
-
-    public static final FluidEntry<BaseFlowingFluid.Flowing> CREAM =
+    static {
+        CreateButterCat.REGISTRATE.setCreativeTab(ModCreativeModeTabs.CBC_TAB);
+    }
+    public static final FluidEntry<ForgeFlowingFluid.Flowing> CREAM =
             REGISTRATE.standardFluid("cream",(p,s,f)->new BaseFluidType(p,s,f,14147267))
                     .properties(b -> b. viscosity(100)
                             .canSwim(false)
@@ -38,15 +40,15 @@ public class ModFluids {
                             .slopeFindDistance(2)
                             .explosionResistance(50))
                     .tag(ModTags.CREAM)
-                    .source(BaseFlowingFluid.Flowing.Source::new)
+                    .source(ForgeFlowingFluid.Flowing.Source::new)
                     .block()
                     .properties(p -> p.mapColor(MapColor.TERRACOTTA_WHITE))
                     .build()
                     .bucket()
                     .onRegister(ModFluids::registerFluidDispenseBehavior)
-                    .tag(Tags.Items.BUCKETS)
                     .build()
                     .register();
+
 
 
     private static final DispenseItemBehavior DEFAULT = new DefaultDispenseItemBehavior();
@@ -54,8 +56,8 @@ public class ModFluids {
         @Override
         protected ItemStack execute(BlockSource pSource, ItemStack pStack) {
             DispensibleContainerItem dispensibleContainerItem = (DispensibleContainerItem) pStack.getItem();
-            BlockPos pos = pSource.pos().relative(pSource.state().getValue(DispenserBlock.FACING));
-            Level level = pSource.level();
+            BlockPos pos = pSource.getPos().relative(pSource.getBlockState().getValue(DispenserBlock.FACING));
+            Level level = pSource.getLevel();
             if (dispensibleContainerItem.emptyContents(null, level, pos, null, pStack)) {
                 return new ItemStack(Items.BUCKET);
             }

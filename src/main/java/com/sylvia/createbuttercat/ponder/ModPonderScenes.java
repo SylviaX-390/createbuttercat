@@ -40,10 +40,10 @@ public class ModPonderScenes {
 
         scene.world().createEntity(world->{
                Cat c = EntityType.CAT.create(world);
-               c.setPos(catPos.getBottomCenter());
+               c.setPos(catPos.getCenter().x,catPos.getCenter().y-.5,catPos.getCenter().z);
                c.setYRot(180);
                c.setInSittingPose(true);
-               c.setVariant(BuiltInRegistries.CAT_VARIANT.getHolder(CatVariant.TABBY).get());
+               c.setVariant(BuiltInRegistries.CAT_VARIANT.get(CatVariant.TABBY));
                return c;
         });
 
@@ -138,9 +138,9 @@ public class ModPonderScenes {
         scene.world().setBlock(enginePos, Blocks.AIR.defaultBlockState(), true);
         scene.world().createEntity(world->{
             Cat c = EntityType.CAT.create(world);
-            c.setPos(catDropPos.getBottomCenter());
+            c.setPos(catDropPos.getCenter().x,catDropPos.getCenter().y-.5,catDropPos.getCenter().z);
             c.setYRot(180);
-            c.setVariant(BuiltInRegistries.CAT_VARIANT.getHolder(CatVariant.TABBY).get());
+            c.setVariant(BuiltInRegistries.CAT_VARIANT.get(CatVariant.TABBY));
             c.setLying(true);
             return c;
         });

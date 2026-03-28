@@ -7,42 +7,29 @@ import com.sylvia.createbuttercat.datagen.recipe.*;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
-import net.minecraft.world.item.alchemy.PotionBrewing;
-import net.minecraft.world.item.alchemy.Potions;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
-import net.neoforged.neoforge.data.event.GatherDataEvent;
-import net.neoforged.neoforge.event.brewing.RegisterBrewingRecipesEvent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.common.data.ExistingFileHelper;
+import net.minecraftforge.data.event.GatherDataEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 
-import java.util.concurrent.CompletableFuture;
+@Mod.EventBusSubscriber(modid = CreateButterCat.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 
-
-
-@EventBusSubscriber(modid = CreateButterCat.MODID)
 public class ModDataGen {
     @SubscribeEvent
     public static void create(GatherDataEvent event) {
         String MODID = CreateButterCat.MODID;
         DataGenerator generator = event.getGenerator();
         PackOutput output = generator.getPackOutput();
-        CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
-        ExistingFileHelper existingFileHelper = event.getExistingFileHelper();
 
-        generator.addProvider(event.includeServer(), new ModLang(output, MODID, "en_us"));
-        generator.addProvider(event.includeServer(), new ModLangZHCN(output, MODID, "zh_cn"));
+        generator.addProvider(event.includeClient(), new ModLang(output, MODID, "en_us"));
+        generator.addProvider(event.includeClient(), new ModLangZHCN(output, MODID, "zh_cn"));
 
-        generator.addProvider(event.includeServer(), new ModCompactingRecipeGen(output, lookupProvider, MODID));
-        generator.addProvider(event.includeServer(), new ModMixingRecipeGen(output, lookupProvider,MODID));
-        generator.addProvider(event.includeServer(), new ModSequencedAssemblyRecipeGen(output, lookupProvider,MODID));
-        generator.addProvider(event.includeServer(), new ModFillingRecipeGen(output, lookupProvider,MODID));
-        generator.addProvider(event.includeServer(), new ModRecipeGen(output, lookupProvider));
+        generator.addProvider(event.includeServer(), new ModCompactingRecipeGen(output, MODID));
+        generator.addProvider(event.includeServer(), new ModMixingRecipeGen(output,MODID));
+        generator.addProvider(event.includeServer(), new ModSequencedAssemblyRecipeGen(output,MODID));
+        generator.addProvider(event.includeServer(), new ModFillingRecipeGen(output, MODID));
+        generator.addProvider(event.includeServer(), new ModRecipeGen(output));
 
-    }
-    @SubscribeEvent
-    public static void onBrewingRecipeReg(RegisterBrewingRecipesEvent event){
-        PotionBrewing.Builder builder = event.getBuilder();
-        builder.addMix(Potions.AWKWARD, ModItems.INCOMPLETE_SUPER_BUTTER.get(),ModPotions.ROTATION);
-        builder.addMix(ModPotions.ROTATION, ModItems.SUPER_BUTTER.get(),ModPotions.SUPER_ROTATION);
     }
 }

@@ -4,18 +4,16 @@ import com.simibubi.create.api.data.recipe.SequencedAssemblyRecipeGen;
 import com.simibubi.create.content.kinetics.deployer.DeployerApplicationRecipe;
 import com.simibubi.create.content.kinetics.press.PressingRecipe;
 import com.sylvia.createbuttercat.register.ModItems;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 
-import java.util.concurrent.CompletableFuture;
 import java.util.stream.Stream;
 
 public class ModSequencedAssemblyRecipeGen extends SequencedAssemblyRecipeGen {
-    public ModSequencedAssemblyRecipeGen(PackOutput output, CompletableFuture<HolderLookup.Provider> registries, String defaultNamespace) {
-        super(output, registries, defaultNamespace);
+    public ModSequencedAssemblyRecipeGen(PackOutput output,  String defaultNamespace) {
+        super(output, defaultNamespace);
     }
     GeneratedRecipe SUPER_BUTTER = create("super_butter", b -> b
             .require(ModItems.HONEY_BUTTER)
