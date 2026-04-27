@@ -1,7 +1,9 @@
 package com.sylvia.createbuttercat.block;
 
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.kinetics.base.HorizontalKineticBlock;
+import com.simibubi.create.content.kinetics.belt.BeltBlockEntity;
 import com.simibubi.create.foundation.block.IBE;
 import com.sylvia.createbuttercat.datagen.other.ModTags;
 import com.sylvia.createbuttercat.event.ClientEffect;
@@ -14,19 +16,24 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.loot.LootParams;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 public class ButterCatEngineBlock extends HorizontalKineticBlock implements  IBE<ButterCatEngineBlockEntity> {
 
@@ -62,6 +69,15 @@ public class ButterCatEngineBlock extends HorizontalKineticBlock implements  IBE
         return 0;
     }
 
+    @Override
+    public @NotNull List<ItemStack> getDrops(BlockState state, LootParams.Builder builder) {
+        List<ItemStack> drops = super.getDrops(state, builder);
+        BlockEntity blockEntity = builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
+        if (blockEntity instanceof ButterCatEngineBlockEntity be) {
+            be.dropButterCat(builder.getLevel());
+        }
+        return drops;
+    }
     @Override
     protected ItemInteractionResult useItemOn(ItemStack itemStack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult result) {
         if (hand != InteractionHand.MAIN_HAND || itemStack.is(AllItems.WRENCH)) {
@@ -189,21 +205,4 @@ public class ButterCatEngineBlock extends HorizontalKineticBlock implements  IBE
         return ModBlockEnetities.BUTTER_CAT_ENGINE_BE.get();
     }
 
-    @Override
-    public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
-        if (state.hasBlockEntity() && (state.getBlock() != newState.getBlock() || !newState.hasBlockEntity())) {
-            if (level.getBlockEntity(pos) instanceof ButterCatEngineBlockEntity be) {
-                if (!level.isClientSide) {
-                    level.addFreshEntity(be.getCat(level));
-                }
-                if (be.isInfinite()) {
-                    Block.popResource(level, pos, new ItemStack(ModItems.SUPER_BUTTER.get()));
-                } else {
-                    int butterCount = be.getButterCount();
-                    if (butterCount > 0) Block.popResource(level, pos, new ItemStack(ModItems.BUTTER.get(), butterCount));
-                }
-                level.removeBlockEntity(pos);
-            }
-        }
-    }
 }

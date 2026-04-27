@@ -62,7 +62,7 @@ public class AddCatHandler {
         level.setBlockAndUpdate(pos,newBlockState);
 
         if(level.getBlockEntity(pos) instanceof ButterCatEngineBlockEntity be){
-            be.setCat(cat);
+            be.setCatVariant(cat.getVariant().getKey());
             cat.discard();
         }
 

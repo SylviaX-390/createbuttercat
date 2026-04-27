@@ -7,7 +7,7 @@ import com.sylvia.createbuttercat.block.ButterCatEngineBlock;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.material.MapColor;
-
+import static com.simibubi.create.foundation.data.ModelGen.customItemModel;
 import static com.sylvia.createbuttercat.CreateButterCat.REGISTRATE;
 
 public class ModBlocks {
@@ -18,8 +18,7 @@ public class ModBlocks {
             .blockstate(BlockStateGen.horizontalBlockProvider(true))
             .loot((loot,block)->loot.dropOther(block, AllBlocks.SHAFT))
             .item()
-            .model((c, p) -> p.blockItem(c, "/item"))
-            .build()
+            .transform(customItemModel())
             .register();
 
     public static void register() {}

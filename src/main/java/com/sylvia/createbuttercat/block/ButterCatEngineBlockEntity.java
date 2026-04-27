@@ -7,32 +7,37 @@ import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour
 import com.simibubi.create.foundation.blockEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.blockEntity.behaviour.scrollValue.ScrollOptionBehaviour;
 import com.simibubi.create.foundation.utility.CreateLang;
-import com.sylvia.createbuttercat.register.ModConfigs;
-import com.sylvia.createbuttercat.register.ModPartialModels;
+import com.sylvia.createbuttercat.CreateButterCat;
+import com.sylvia.createbuttercat.register.*;
 import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import dev.engine_room.flywheel.lib.transform.TransformStack;
 import net.createmod.catnip.math.AngleHelper;
 import net.createmod.catnip.math.VecHelper;
+import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.Cat;
 import net.minecraft.world.entity.animal.CatVariant;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.neoforge.client.model.data.ModelData;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.simibubi.create.content.kinetics.base.HorizontalKineticBlock.HORIZONTAL_FACING;
 
@@ -46,10 +51,14 @@ public class  ButterCatEngineBlockEntity  extends GeneratingKineticBlockEntity {
     protected int overflowCount = 0;
     protected int cd = 0;
     protected float angle = 0;
-    protected Cat cat;
 
     public ButterCatEngineBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
+    }
+
+    @Override
+    public ModelData getModelData() {
+        return super.getModelData();
     }
 
     @Override
@@ -60,6 +69,22 @@ public class  ButterCatEngineBlockEntity  extends GeneratingKineticBlockEntity {
         movementDirection.withCallback($ -> updateGeneratedRotation());
 
         behaviours.add(movementDirection);
+    }
+    @Override
+    public void initialize() {
+        super.initialize();
+        if (!hasSource() || getGeneratedSpeed() > getTheoreticalSpeed())
+            updateGeneratedRotation();
+
+    }
+
+    public void dropButterCat(Level level){
+
+        level.addFreshEntity(getCat(level));
+        if (isInfinite())
+            Block.popResource(level, getBlockPos(), new ItemStack(ModItems.SUPER_BUTTER.get()));
+        else if (getButterCount() > 0) Block.popResource(level, getBlockPos(), new ItemStack(ModItems.BUTTER.get(), getButterCount()));
+
     }
     ///================getter/setter================
     public void addButterCount(int count) {
@@ -79,15 +104,18 @@ public class  ButterCatEngineBlockEntity  extends GeneratingKineticBlockEntity {
         return butterCount + overflowCount;
     }
 
-    public void setCat(Cat cat) {
-        this.cat = cat;
-        this.catVariant = cat.getVariant().getKey();
+    public void setCatVariant(ResourceKey<CatVariant> catVariant) {
+        this.catVariant = catVariant;
+    }
+
+    public ResourceKey<CatVariant> getCatVariant() {
+        return catVariant;
     }
 
     public Cat getCat(Level level) {
-        if(cat == null) cat =EntityType.CAT.create(level);
+        Cat cat = new Cat(EntityType.CAT, level);
         cat.setVariant(BuiltInRegistries.CAT_VARIANT.getHolder(catVariant).get());
-        cat.setPos(getBlockPos().getBottomCenter());
+        cat.setPos(getBlockPos().getCenter());
         Player player = level.getNearestPlayer(cat,6);
         if(player!=null)
             cat.setLeashedTo(player, true);
@@ -125,6 +153,7 @@ public class  ButterCatEngineBlockEntity  extends GeneratingKineticBlockEntity {
 
     public void tick(){
         super.tick();
+
         angle = ( angle +  getAngularSpeed())% 360;
         if(isInfinite())return;
         if(butterCount > 0){
@@ -177,7 +206,7 @@ public class  ButterCatEngineBlockEntity  extends GeneratingKineticBlockEntity {
         compound.putInt("butterCount", butterCount);
         compound.putInt("overflowCount", overflowCount);
 
-        compound.putString("catVariant", catVariant.location().toString());
+        compound.putInt("catVariant", getCatVariantFromIndex(catVariant));
     }
 
     @Override
@@ -190,8 +219,7 @@ public class  ButterCatEngineBlockEntity  extends GeneratingKineticBlockEntity {
         if (compound.contains("butterCount")) butterCount = compound.getInt("butterCount");
         if (compound.contains("overflowCount")) overflowCount = compound.getInt("overflowCount");
 
-        if (compound.contains("catVariant")) catVariant = ResourceKey.create(Registries.CAT_VARIANT, ResourceLocation.parse(compound.getString("catVariant")));
-
+        if (compound.contains("catVariant")) catVariant = getCatVariantByIndex(compound.getInt("catVariant"));
     }
     ///================get models================
     public int getButterLevel(){
@@ -255,4 +283,32 @@ public class  ButterCatEngineBlockEntity  extends GeneratingKineticBlockEntity {
     public static int getMaxInfiniteOutput(){
         return ModConfigs.COMMON.maxInfiniteCapacity.get();
     }
+
+    private static final Map<ResourceKey<CatVariant>, Integer> VARIANT_TO_INDEX = new HashMap<>();
+
+    static {
+        VARIANT_TO_INDEX.put(CatVariant.TABBY, 1);
+        VARIANT_TO_INDEX.put(CatVariant.BLACK, 2);
+        VARIANT_TO_INDEX.put(CatVariant.RED, 3);
+        VARIANT_TO_INDEX.put(CatVariant.SIAMESE, 4);
+        VARIANT_TO_INDEX.put(CatVariant.BRITISH_SHORTHAIR, 5);
+        VARIANT_TO_INDEX.put(CatVariant.CALICO, 6);
+        VARIANT_TO_INDEX.put(CatVariant.PERSIAN, 7);
+        VARIANT_TO_INDEX.put(CatVariant.RAGDOLL, 8);
+        VARIANT_TO_INDEX.put(CatVariant.WHITE, 9);
+        VARIANT_TO_INDEX.put(CatVariant.JELLIE, 10);
+        VARIANT_TO_INDEX.put(CatVariant.ALL_BLACK, 11);
+    }
+
+    public static int getCatVariantFromIndex(ResourceKey<CatVariant> catVariant) {
+        return VARIANT_TO_INDEX.getOrDefault(catVariant, 1);
+    }
+    public static ResourceKey<CatVariant> getCatVariantByIndex(int index) {
+        return VARIANT_TO_INDEX.entrySet().stream()
+                .filter(entry -> entry.getValue() == index)
+                .map(Map.Entry::getKey)
+                .findFirst()
+                .orElse(CatVariant.TABBY);
+    }
+
 }

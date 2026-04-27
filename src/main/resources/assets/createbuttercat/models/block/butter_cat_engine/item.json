@@ -5,9 +5,12 @@
   "textures": {
     "axis": "create:block/axis",
     "axis_top": "create:block/axis_top",
-    "0": "createbuttercat:block/cat/tabby",
+    		"axis": "create:block/axis",
+		"axis_top": "create:block/axis_top",
+		"0": "createbuttercat:block/cat/tabby",
     "particle": "createbuttercat:block/cat/tabby"
   },
+
   "display": {
     "thirdperson_righthand": {
       "rotation": [75, 45, 0],
