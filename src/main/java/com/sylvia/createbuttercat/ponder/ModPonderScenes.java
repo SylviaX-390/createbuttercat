@@ -1,5 +1,6 @@
 package com.sylvia.createbuttercat.ponder;
 
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.kinetics.gauge.StressGaugeBlockEntity;
 import com.simibubi.create.foundation.ponder.CreateSceneBuilder;
@@ -152,28 +153,52 @@ public class ModPonderScenes {
                 .text("Don't worry, the cat is still here,it just doesn't recognize its owner anymore...")
                 .placeNearTarget()
                 .pointAt(util.vector().topOf(catDropPos));
-        scene.idle(60);
+        scene.idle(90);
 
         scene.addKeyframe();
 
-        scene.world().modifyEntity(catElementLink, Entity::discard);
-        scene.world().setBlock(catPos, Blocks.AIR.defaultBlockState(), true);
+        scene.overlay().showControls(util.vector().topOf(enginePos), Pointing.DOWN, 20).rightClick().withItem( AllBlocks.SHAFT.asStack());
+        scene.world().setBlock(enginePos, AllBlocks.SHAFT.getDefaultState().setValue(BlockStateProperties.AXIS,Direction.EAST.getAxis()), true);
+        scene.idle(40);
 
-        scene.idle(20);
+        scene.overlay().showControls(util.vector().topOf(catPos), Pointing.DOWN, 20).rightClick().withItem( Items.LEAD.getDefaultInstance());
+        scene.idle(40);
 
+        scene.overlay().showControls(util.vector().topOf(enginePos), Pointing.DOWN, 20).rightClick().withItem( Items.LEAD.getDefaultInstance());
         scene.world().setBlock(enginePos, ModBlocks.BUTTER_CAT_ENGINE.getDefaultState().setValue(BlockStateProperties.HORIZONTAL_FACING,Direction.EAST), true);
-        scene.world().modifyBlockEntity(enginePos,ButterCatEngineBlockEntity.class,(be)->be.addCat(CatVariant.JELLIE));
-        scene.idle(20);
-        scene.world().modifyBlockEntity(enginePos,ButterCatEngineBlockEntity.class,(be)->be.addCat(CatVariant.CALICO));
-        scene.idle(10);
-        scene.world().modifyBlockEntity(enginePos,ButterCatEngineBlockEntity.class,(be)->be.addCat(CatVariant.SIAMESE));
-        scene.idle(10);
-        scene.world().modifyBlockEntity(enginePos,ButterCatEngineBlockEntity.class,(be)->be.addCat(CatVariant.WHITE));
-        scene.idle(90);
+        scene.world().modifyEntity(catElementLink, Entity::discard);
+        scene.idle(40);
+
+        scene.overlay().showControls(util.vector().topOf(enginePos), Pointing.DOWN, 20).rightClick().withItem( Items.BREAD.getDefaultInstance());
+        scene.world().modifyBlockEntity(enginePos,ButterCatEngineBlockEntity.class, ButterCatEngineBlockEntity::addBread);
+        scene.idle(40);
+
+        scene.overlay().showControls(util.vector().topOf(enginePos), Pointing.DOWN, 20).rightClick().withItem( ModItems.INCOMPLETE_SUPER_BUTTER.asStack());
+        scene.world().modifyBlockEntity(enginePos,ButterCatEngineBlockEntity.class,(be)->be.setInfinite(true));
+        scene.effects().indicateRedstone(enginePos);
+        scene.world().setKineticSpeed(util.select().everywhere(), 8);
+        scene.effects().indicateSuccess(speedPos);
+        scene.idle(40);
+
+        for(int i = 0;i<3;i++){
+            scene.overlay().showControls(util.vector().topOf(enginePos), Pointing.DOWN, 20).rightClick().withItem( Items.LEAD.getDefaultInstance());
+            scene.idle(10);
+
+            int catIndex = i + 3;
+            scene.world().modifyBlockEntity(enginePos,ButterCatEngineBlockEntity.class,(be)->be.addCat(ButterCatEngineBlockEntity.getCatVariantFromIndex(catIndex )));
+
+            scene.world().setKineticSpeed(util.select().everywhere(), 8 + i * 8);
+            scene.effects().indicateSuccess(speedPos);
+            scene.effects().indicateRedstone(stressPos);
+
+            scene.idle(20);
+        }
+
         scene.overlay().showText(50)
                 .text("Four cats, four times the power!")
                 .placeNearTarget()
-                .pointAt(util.vector().topOf(catDropPos));
+                .pointAt(util.vector().topOf(enginePos));
+        scene.idle(60);
 
         scene.markAsFinished();
     }

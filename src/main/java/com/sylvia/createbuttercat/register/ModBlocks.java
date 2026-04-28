@@ -28,7 +28,7 @@ public class ModBlocks {
 
     public static final BlockEntry<ButterBlock> BUTTER_BLOCK = REGISTRATE
             .block("butter_block", ButterBlock::new)
-            .initialProperties(()-> Blocks.SLIME_BLOCK)
+            .initialProperties(()-> Blocks.HONEY_BLOCK)
             .properties(BlockBehaviour.Properties::randomTicks)
             .simpleItem()
             .register();
