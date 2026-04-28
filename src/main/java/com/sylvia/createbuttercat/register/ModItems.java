@@ -42,7 +42,7 @@ public class ModItems {
                     .effect(()->new MobEffectInstance(ModEffects.BUTTER_ROTATION_EFFECT,90,1),1)
                             .effect(()->new MobEffectInstance(MobEffects.LEVITATION,90,0),1)
                     .build())
-                    .component(ModDataComponents.BUTTER_LEVEL, 5)
+                    .component(ModDataComponents.BUTTER_LEVEL, 8)
             )
             .register();
 
@@ -55,7 +55,7 @@ public class ModItems {
                     .saturationModifier(0.5F)
                     .effect(()->new MobEffectInstance(ModEffects.BUTTER_ROTATION_EFFECT,30,2),1)
                     .build())
-                    .component(ModDataComponents.BUTTER_LEVEL, 3)
+                    .component(ModDataComponents.BUTTER_LEVEL, 4)
             )
             .register();
 

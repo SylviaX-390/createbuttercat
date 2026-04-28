@@ -8,7 +8,7 @@ public class  ModConfigs {
     public static class Common {
         public final ModConfigSpec.IntValue maxButterCount;
         public final ModConfigSpec.IntValue maxInfiniteCapacity;
-        public final static int MAX_VALUE = Integer.MAX_VALUE / 256;
+        public final static int MAX_VALUE = 1024;
 
         Common(ModConfigSpec.Builder builder) {
             builder.comment("ButterCat Mod Configuration")
@@ -21,8 +21,8 @@ public class  ModConfigs {
 
             maxInfiniteCapacity = builder
                     .comment(String.format("Max infinite capacity [2-%d] when 4 cats", MAX_VALUE))
-                    .comment("Default:144")
-                    .defineInRange("maxInfiniteCapacity", 1024, 2, MAX_VALUE);
+                    .comment("Default:64")
+                    .defineInRange("maxInfiniteCapacity", 64, 2, MAX_VALUE);
 
             builder.pop();
         }

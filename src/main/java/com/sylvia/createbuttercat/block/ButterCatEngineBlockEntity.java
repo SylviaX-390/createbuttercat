@@ -30,6 +30,8 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -38,6 +40,7 @@ import static com.simibubi.create.content.kinetics.base.HorizontalKineticBlock.H
 
 
 public class  ButterCatEngineBlockEntity  extends GeneratingKineticBlockEntity {
+    private static final Logger log = LoggerFactory.getLogger(ButterCatEngineBlockEntity.class);
     protected ScrollOptionBehaviour<WindmillBearingBlockEntity.RotationDirection> movementDirection;
     protected final List<ResourceKey<CatVariant>> catVariants = new ArrayList<>();
     protected boolean bread =false;
@@ -144,7 +147,7 @@ public class  ButterCatEngineBlockEntity  extends GeneratingKineticBlockEntity {
 
         angle = ( angle +  getAngularSpeed())% 360;
         if(isInfinite())return;
-        if(butterCount >= getCatCount()){
+        if(enable()){
             cd++;
         }
         if(cd > 200 ){
@@ -160,14 +163,17 @@ public class  ButterCatEngineBlockEntity  extends GeneratingKineticBlockEntity {
         }
     }
 
-
+   public boolean enable(){
+        return getButterCount()>=getCatCount();
+   }
     ///================ speed ================
     //应力生产速度，受黄油数量和猫数量影响
     @Override
     public float getGeneratedSpeed() {
+        if(!enable()) return 0;
         float speed = isInfinite()
                 ? 256
-                : Math.min(butterCount * getCatCount(), 256);
+                : Math.min(butterCount * getCatCount() * 2, 256);
         return speed * getAngleSpeedDirection();
     }
     //应力系数
@@ -175,11 +181,11 @@ public class  ButterCatEngineBlockEntity  extends GeneratingKineticBlockEntity {
     public float calculateAddedStressCapacity() {
         float capacity = isInfinite()
                 ? getMaxInfiniteOutput() * getCatCount()
-                : (float) this.butterCount * getCatCount();
+                : (float) this.butterCount * 8 * getCatCount() ;
         this.lastCapacityProvided = capacity;
         return capacity;
     }
-    //引擎自己的旋转方向，明确返回 ±1
+    //引擎自己的旋转方向
     protected float getAngleSpeedDirection() {
         WindmillBearingBlockEntity.RotationDirection rotationDirection = WindmillBearingBlockEntity.RotationDirection.values()[movementDirection.getValue()];
         return (rotationDirection == WindmillBearingBlockEntity.RotationDirection.CLOCKWISE ? 1 : -1);
@@ -221,13 +227,7 @@ public class  ButterCatEngineBlockEntity  extends GeneratingKineticBlockEntity {
     }
     ///================get models================
     public int getButterLevel(){
-        if (butterCount==0)
-            return 0;
-        else if(butterCount>8 && butterCount<=16)
-            return 2;
-        else if(butterCount>16)
-            return 3;
-        return 1;
+        return Math.min((int)Math.floor(getSpeed()/32),3) ;
     }
     public List<PartialModel> getCatModels() {
         return catVariants.stream()
