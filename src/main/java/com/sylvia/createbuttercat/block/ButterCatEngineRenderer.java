@@ -3,6 +3,7 @@ package com.sylvia.createbuttercat.block;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntityRenderer;
 import dev.engine_room.flywheel.api.visualization.VisualizationManager;
+import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import net.createmod.catnip.render.CachedBuffers;
 import net.createmod.catnip.render.SuperByteBuffer;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -27,6 +28,15 @@ public class ButterCatEngineRenderer  extends KineticBlockEntityRenderer<ButterC
         return shaft(getRotationAxisOf(be));
     }
 
+    public static int getCatAdditionalAngle(int k){
+        if(k == 1)
+            return 180;
+        else if(k == 2)
+            return 90;
+        else if(k == 3)
+            return 270;
+        return 0;
+    }
 
     @Override
     protected void renderSafe(ButterCatEngineBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
@@ -40,20 +50,26 @@ public class ButterCatEngineRenderer  extends KineticBlockEntityRenderer<ButterC
         float degree = be.getInterpolatedAngle(partialTicks-1);
         if(direction == Direction.NORTH || direction == Direction.WEST) degree = -degree;
 
-        //cat
-        SuperByteBuffer cat = CachedBuffers.partialFacing(be.getCatModel(), blockState, direction);
-        cat.rotateCenteredDegrees(degree,direction);
-        cat.light(light).overlay(overlay).renderInto(ms, buffer.getBuffer(RenderType.cutoutMipped()));
+        int k = 0;
+        for(PartialModel pm : be.getCatModels()){
+            //cat
+            SuperByteBuffer cat = CachedBuffers.partialFacing(pm, blockState, direction);
+            cat.rotateCenteredDegrees(degree + getCatAdditionalAngle(k) ,direction);
+            cat.light(light).overlay(overlay).renderInto(ms, buffer.getBuffer(RenderType.cutoutMipped()));
 
-        //butter
-        SuperByteBuffer butter = CachedBuffers.partialFacing(be.getButterModel(), blockState, direction);
-        butter.rotateCenteredDegrees(degree,direction);
-        butter.light(light).overlay(overlay).renderInto(ms, buffer.getBuffer(RenderType.solid()));
+            //butter
+            SuperByteBuffer butter = CachedBuffers.partialFacing(be.getButterModel(), blockState, direction);
+            butter.rotateCenteredDegrees(degree + getCatAdditionalAngle(k),direction);
+            butter.light(light).overlay(overlay).renderInto(ms, buffer.getBuffer(RenderType.solid()));
 
-        //bread
-        SuperByteBuffer bread = CachedBuffers.partialFacing(be.getBreadModel(), blockState, direction);
-        bread.rotateCenteredDegrees(degree,direction);
-        bread.light(light).overlay(overlay).renderInto(ms, buffer.getBuffer(RenderType.solid()));
+            //bread
+            SuperByteBuffer bread = CachedBuffers.partialFacing(be.getBreadModel(), blockState, direction);
+            bread.rotateCenteredDegrees(degree + getCatAdditionalAngle(k),direction);
+            bread.light(light).overlay(overlay).renderInto(ms, buffer.getBuffer(RenderType.solid()));
+
+            k++;
+        }
+
+
     }
-
 }

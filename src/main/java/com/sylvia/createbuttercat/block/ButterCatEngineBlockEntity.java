@@ -7,13 +7,11 @@ import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour
 import com.simibubi.create.foundation.blockEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.blockEntity.behaviour.scrollValue.ScrollOptionBehaviour;
 import com.simibubi.create.foundation.utility.CreateLang;
-import com.sylvia.createbuttercat.CreateButterCat;
 import com.sylvia.createbuttercat.register.*;
 import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import dev.engine_room.flywheel.lib.transform.TransformStack;
 import net.createmod.catnip.math.AngleHelper;
 import net.createmod.catnip.math.VecHelper;
-import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -32,19 +30,16 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
-import net.neoforged.neoforge.client.model.data.ModelData;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.simibubi.create.content.kinetics.base.HorizontalKineticBlock.HORIZONTAL_FACING;
 
 
 public class  ButterCatEngineBlockEntity  extends GeneratingKineticBlockEntity {
     protected ScrollOptionBehaviour<WindmillBearingBlockEntity.RotationDirection> movementDirection;
-    protected ResourceKey<CatVariant> catVariant = CatVariant.TABBY;
+    protected final List<ResourceKey<CatVariant>> catVariants = new ArrayList<>();
     protected boolean bread =false;
     protected boolean infinite =false;
     protected int butterCount = 0;
@@ -54,11 +49,7 @@ public class  ButterCatEngineBlockEntity  extends GeneratingKineticBlockEntity {
 
     public ButterCatEngineBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
-    }
-
-    @Override
-    public ModelData getModelData() {
-        return super.getModelData();
+        catVariants.add(CatVariant.TABBY);
     }
 
     @Override
@@ -79,8 +70,9 @@ public class  ButterCatEngineBlockEntity  extends GeneratingKineticBlockEntity {
     }
 
     public void dropButterCat(Level level){
-
-        level.addFreshEntity(getCat(level));
+        for(int i= 0;i<getCatCount();i++){
+            level.addFreshEntity(getCat(level, catVariants.get(i)));
+        }
         if (isInfinite())
             Block.popResource(level, getBlockPos(), new ItemStack(ModItems.SUPER_BUTTER.get()));
         else if (getButterCount() > 0) Block.popResource(level, getBlockPos(), new ItemStack(ModItems.BUTTER.get(), getButterCount()));
@@ -97,25 +89,21 @@ public class  ButterCatEngineBlockEntity  extends GeneratingKineticBlockEntity {
         
         updateGeneratedRotation();
     }
-    public int getButterCount() {
-        return butterCount;
-    }
-    public int getTotalCount() {
-        return butterCount + overflowCount;
-    }
-
-    public void setCatVariant(ResourceKey<CatVariant> catVariant) {
-        this.catVariant = catVariant;
-    }
-
-    public ResourceKey<CatVariant> getCatVariant() {
-        return catVariant;
+    public int getButterCount() {return butterCount;}
+    public int getTotalCount() {return butterCount + overflowCount;}
+    public int getCatCount(){return catVariants.size();}
+    public void clearCats(){
+        catVariants.clear();}
+    public boolean addCat(ResourceKey<CatVariant> catVariant) {
+        if (getCatCount() >=4) return false;
+        this.catVariants.add(catVariant);
+        return true;
     }
 
-    public Cat getCat(Level level) {
+    public Cat getCat(Level level,ResourceKey<CatVariant> variant) {
         Cat cat = new Cat(EntityType.CAT, level);
-        cat.setVariant(BuiltInRegistries.CAT_VARIANT.getHolder(catVariant).get());
-        cat.setPos(getBlockPos().getCenter());
+        cat.setVariant(BuiltInRegistries.CAT_VARIANT.getHolder(variant).get());
+        cat.setPos(getBlockPos().getCenter().offsetRandom(level.random, 0.2f));
         Player player = level.getNearestPlayer(cat,6);
         if(player!=null)
             cat.setLeashedTo(player, true);
@@ -144,7 +132,7 @@ public class  ButterCatEngineBlockEntity  extends GeneratingKineticBlockEntity {
         return infinite;
     }
     public boolean isFull() {
-        return overflowCount !=0 || isInfinite();
+        return overflowCount > getCatCount() || isInfinite();
     }
 
     public int getCd(boolean remaining) {
@@ -156,33 +144,38 @@ public class  ButterCatEngineBlockEntity  extends GeneratingKineticBlockEntity {
 
         angle = ( angle +  getAngularSpeed())% 360;
         if(isInfinite())return;
-        if(butterCount > 0){
+        if(butterCount >= getCatCount()){
             cd++;
         }
         if(cd > 200 ){
-            if(butterCount > 0) butterCount --;
+            if(butterCount > 0) butterCount -= getCatCount();
             if(overflowCount > 0){
-                butterCount ++;
-                overflowCount--;
+                //从溢出量中补给当前量
+                int diffCount = Math.min(getMaxButterCount() - butterCount, overflowCount);
+                overflowCount -= diffCount;
+                butterCount += diffCount;
             }
             cd = 0;
             updateGeneratedRotation();
         }
     }
+
+
     ///================ speed ================
-    //getSpeed() 返回最终速度
-    //应力生产速度，黄油输入16个后达到最大速度，超出部分继续累加在应力系数上
+    //应力生产速度，受黄油数量和猫数量影响
     @Override
     public float getGeneratedSpeed() {
-        if (isInfinite()) return 256 * getAngleSpeedDirection() ;
-        int speed = butterCount <= 16  ? butterCount * 16 : 256;
+        float speed = isInfinite()
+                ? 256
+                : Math.min(butterCount * getCatCount(), 256);
         return speed * getAngleSpeedDirection();
     }
     //应力系数
     @Override
     public float calculateAddedStressCapacity() {
-        float capacity = this.butterCount * 2;
-        if(isInfinite()) capacity = getMaxInfiniteOutput();
+        float capacity = isInfinite()
+                ? getMaxInfiniteOutput() * getCatCount()
+                : (float) this.butterCount * getCatCount();
         this.lastCapacityProvided = capacity;
         return capacity;
     }
@@ -206,30 +199,40 @@ public class  ButterCatEngineBlockEntity  extends GeneratingKineticBlockEntity {
         compound.putInt("butterCount", butterCount);
         compound.putInt("overflowCount", overflowCount);
 
-        compound.putInt("catVariant", getCatVariantFromIndex(catVariant));
+        compound.putIntArray("catVariants", catVariants.stream().mapToInt(ButterCatEngineBlockEntity::getCatVariantToIndex).toArray());
     }
 
     @Override
     protected void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
         super.read(compound, registries, clientPacket);
 
-        if (compound.contains("infinite")) infinite = compound.getBoolean("infinite");
-        if (compound.contains("bread")) bread = compound.getBoolean("bread");
-        if (compound.contains("cd")) cd = compound.getInt("cd");
-        if (compound.contains("butterCount")) butterCount = compound.getInt("butterCount");
-        if (compound.contains("overflowCount")) overflowCount = compound.getInt("overflowCount");
+        infinite = compound.getBoolean("infinite");
+        bread = compound.getBoolean("bread");
+        cd = compound.getInt("cd");
+        butterCount = compound.getInt("butterCount");
+        overflowCount = compound.getInt("overflowCount");
 
-        if (compound.contains("catVariant")) catVariant = getCatVariantByIndex(compound.getInt("catVariant"));
+        this.clearCats();
+        if (compound.contains("catVariants")) {
+            for ( int i : compound.getIntArray("catVariants")  ){
+                this.addCat(ButterCatEngineBlockEntity.getCatVariantFromIndex(i));
+            }
+        }
     }
     ///================get models================
     public int getButterLevel(){
-        if(butterCount==0) return 0;
-        else if(butterCount>8 && butterCount<=16) return 2;
-        else if(butterCount>16) return 3;
+        if (butterCount==0)
+            return 0;
+        else if(butterCount>8 && butterCount<=16)
+            return 2;
+        else if(butterCount>16)
+            return 3;
         return 1;
     }
-    public PartialModel getCatModel() {
-        return ModPartialModels.getCatModel(catVariant);
+    public List<PartialModel> getCatModels() {
+        return catVariants.stream()
+                .map(ModPartialModels::getCatModel)
+                .collect(Collectors.toList());
     }
     public PartialModel getButterModel() {
         if(isInfinite()) return ModPartialModels.BCE_SUPER_BUTTER;
@@ -277,6 +280,7 @@ public class  ButterCatEngineBlockEntity  extends GeneratingKineticBlockEntity {
         }
 
     }
+
     public static int getMaxButterCount(){
         return ModConfigs.COMMON.maxButterCount.get();
     }
@@ -300,10 +304,10 @@ public class  ButterCatEngineBlockEntity  extends GeneratingKineticBlockEntity {
         VARIANT_TO_INDEX.put(CatVariant.ALL_BLACK, 11);
     }
 
-    public static int getCatVariantFromIndex(ResourceKey<CatVariant> catVariant) {
+    public static int getCatVariantToIndex(ResourceKey<CatVariant> catVariant) {
         return VARIANT_TO_INDEX.getOrDefault(catVariant, 1);
     }
-    public static ResourceKey<CatVariant> getCatVariantByIndex(int index) {
+    public static ResourceKey<CatVariant> getCatVariantFromIndex(int index) {
         return VARIANT_TO_INDEX.entrySet().stream()
                 .filter(entry -> entry.getValue() == index)
                 .map(Map.Entry::getKey)

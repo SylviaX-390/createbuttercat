@@ -3,25 +3,26 @@ package com.sylvia.createbuttercat.register;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import org.apache.commons.lang3.tuple.Pair;
 
-public class ModConfigs {
+public class  ModConfigs {
 
     public static class Common {
         public final ModConfigSpec.IntValue maxButterCount;
         public final ModConfigSpec.IntValue maxInfiniteCapacity;
+        public final static int MAX_VALUE = Integer.MAX_VALUE / 256;
 
         Common(ModConfigSpec.Builder builder) {
             builder.comment("ButterCat Mod Configuration")
                     .push("general");
 
             maxButterCount = builder
-                    .comment("Max butter count [1-8192]")
+                    .comment(String.format("Max butter count [1-%d]",MAX_VALUE))
                     .comment("Default:64")
-                    .defineInRange("maxButterCount", 64, 1, 8192);
+                    .defineInRange("maxButterCount", 64, 1, MAX_VALUE);
 
             maxInfiniteCapacity = builder
-                    .comment(String.format("Max infinite capacity [2-%d]", Integer.MAX_VALUE / 256))
-                    .comment("Default:576")
-                    .defineInRange("maxInfiniteCapacity", 576, 2, Integer.MAX_VALUE / 256);
+                    .comment(String.format("Max infinite capacity [2-%d] when 4 cats", MAX_VALUE))
+                    .comment("Default:144")
+                    .defineInRange("maxInfiniteCapacity", 1024, 2, MAX_VALUE);
 
             builder.pop();
         }

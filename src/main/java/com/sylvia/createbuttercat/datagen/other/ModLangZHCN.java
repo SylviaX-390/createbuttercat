@@ -35,6 +35,7 @@ public class ModLangZHCN extends LanguageProvider {
         add("string.createbuttercat.no_butter" , "黄油呢？");
         add("string.createbuttercat.infinite" , "无限供应");
         add("string.createbuttercat.full" , "黄油已经贴满了！");
+        add("string.createbuttercat.full_cat" , "这里容不下更多猫猫了！");
 
         add("string.createbuttercat.remaining" , "剩余");
 

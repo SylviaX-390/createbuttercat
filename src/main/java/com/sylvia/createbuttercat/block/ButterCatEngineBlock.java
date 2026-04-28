@@ -6,6 +6,7 @@ import com.simibubi.create.content.kinetics.base.HorizontalKineticBlock;
 import com.simibubi.create.content.kinetics.belt.BeltBlockEntity;
 import com.simibubi.create.foundation.block.IBE;
 import com.sylvia.createbuttercat.datagen.other.ModTags;
+import com.sylvia.createbuttercat.event.AddCatHandler;
 import com.sylvia.createbuttercat.event.ClientEffect;
 import com.sylvia.createbuttercat.register.ModBlockEnetities;
 import com.sylvia.createbuttercat.register.ModDataComponents;
@@ -17,6 +18,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.animal.Cat;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
@@ -87,14 +89,24 @@ public class ButterCatEngineBlock extends HorizontalKineticBlock implements  IBE
         if (player.isCrouching() || !(level.getBlockEntity(pos) instanceof ButterCatEngineBlockEntity be)) {
             return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         }
+        Cat cat = AddCatHandler.getLeashedCat(player);
+        if(cat != null ) {
+            boolean canAdd = be.addCat(cat.getVariant().getKey());
+            if(canAdd ){
+                cat.discard();
+                ClientEffect.create(level,pos, ClientEffect.EffectType.CAT);
+                return ItemInteractionResult.SUCCESS;
+            }else {
+                displayMessage(player, "string.createbuttercat.full_cat", 0xFF5555);
+                return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+            }
+        }
 
         if (!be.hasBread()) {
             if (ModTags.matchesIngredient(itemStack, ModTags.getBreads())) {
                 be.addBread();
                 itemStack.shrink(1);
-                if (level.isClientSide) {
-                    ClientEffect.create(level, pos, ClientEffect.EffectType.BREAD);
-                }
+                ClientEffect.create(level, pos, ClientEffect.EffectType.BREAD);
                 return ItemInteractionResult.SUCCESS;
             }
             displayMessage(player, "string.createbuttercat.no_bread", 0xFF5555);
@@ -104,9 +116,7 @@ public class ButterCatEngineBlock extends HorizontalKineticBlock implements  IBE
         if (!be.isInfinite() && itemStack.is(ModItems.SUPER_BUTTER)) {
             be.setInfinite(true);
             itemStack.shrink(1);
-            if (level.isClientSide) {
-                ClientEffect.create(level, pos, ClientEffect.EffectType.SUPER_BUTTER);
-            }
+            ClientEffect.create(level, pos, ClientEffect.EffectType.SUPER_BUTTER);
             displayMessage(player, "string.createbuttercat.infinite", 0xFF55FF);
         }
 
@@ -119,9 +129,7 @@ public class ButterCatEngineBlock extends HorizontalKineticBlock implements  IBE
             if (butterLevel != null) {
                 be.addButterCount(butterLevel.intValue());
                 itemStack.shrink(1);
-                if (level.isClientSide) {
-                    ClientEffect.create(level, pos, ClientEffect.EffectType.BUTTER);
-                }
+                ClientEffect.create(level, pos, ClientEffect.EffectType.BUTTER);
             }
         }
 

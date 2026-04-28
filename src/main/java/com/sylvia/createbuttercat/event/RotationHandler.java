@@ -4,8 +4,13 @@ import com.sylvia.createbuttercat.CreateButterCat;
 import com.sylvia.createbuttercat.mob_effect.ButterRotationEffect;
 import com.sylvia.createbuttercat.register.ModEffects;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.animal.Cat;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -14,8 +19,8 @@ import net.neoforged.neoforge.client.event.RenderFrameEvent;
 
 @EventBusSubscriber(modid = CreateButterCat.MODID, value = Dist.CLIENT)
 public class RotationHandler {
-    static float acceleration = 0;
-    static int amplifier = -1;
+    private static float acceleration = 0;
+    private static int amplifier = -1;
     @SubscribeEvent
     public static void onClientTick(ClientTickEvent.Pre event) {
         Player player = Minecraft.getInstance().player;
@@ -33,17 +38,25 @@ public class RotationHandler {
     @SubscribeEvent
     public static void onRender(RenderFrameEvent.Post event) {
         Player player = Minecraft.getInstance().player;
-        if (player == null || acceleration==0) return;
-
+        ClientLevel level = Minecraft.getInstance().level;
         float pt = event.getPartialTick().getGameTimeDeltaPartialTick(true);
-        float y= player.getYRot()+ getAngle(pt,amplifier);
 
-        player.setYRot(y);
+        rotatePlayer(player,pt);
     }
-    public static float getAngle(float pt,int a) {
+
+    private static void rotatePlayer(Player player, float pt) {
+        if (player == null || acceleration==0) return;
+        player.setYRot(player.getYRot()+ getAngle(pt,amplifier));
+    }
+
+    private static float getAngle(float pt,int a) {
         return (getTickAngleSpeed(a) * pt ) % 360;
     }
     private static float getTickAngleSpeed(int amplifier){
         return (3*amplifier+1)* ButterRotationEffect.ROTATION_ANGULAR_SPEED * acceleration;
+    }
+    private static Vec3 getEntityFacing(Entity entity) {
+        float yawRad = (float) Math.toRadians(entity.getYRot());
+        return new Vec3(-Math.sin(yawRad), 0 ,Math.cos(yawRad));
     }
 }

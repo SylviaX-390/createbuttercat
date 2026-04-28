@@ -33,20 +33,26 @@ public class AddCatHandler {
         if (level.isClientSide()|| player.isCrouching()) return;
 
         if (state.is(AllBlocks.SHAFT)) {
-            AABB searchBox = player.getBoundingBox().inflate(10);
-            List<Cat> leashedCats = player.level().getEntitiesOfClass(
-                    Cat.class,
-                    searchBox,
-                    cat -> cat.isLeashed() && cat.getLeashHolder() == player
-            );
-            if (!leashedCats.isEmpty()){
-                replaceBlock(level,player, pos,leashedCats.getFirst());
+            Cat leashedCat = getLeashedCat(player);
+            if (leashedCat != null){
+                replaceBlock(level, player, pos, leashedCat);
                 event.setCanceled(true);
             }
-
         }
     }
 
+    public static Cat getLeashedCat(Player player) {
+        AABB searchBox = player.getBoundingBox().inflate(10);
+        List<Cat> leashedCats = player.level().getEntitiesOfClass(
+                Cat.class,
+                searchBox,
+                cat -> cat.isLeashed() && cat.getLeashHolder() == player
+        );
+        if (!leashedCats.isEmpty()) {
+            return leashedCats.getFirst();
+        }
+        return null;
+    }
 
     private static void replaceBlock(Level level,Player player, BlockPos pos, Cat cat) {
 
@@ -62,10 +68,10 @@ public class AddCatHandler {
         level.setBlockAndUpdate(pos,newBlockState);
 
         if(level.getBlockEntity(pos) instanceof ButterCatEngineBlockEntity be){
-            be.setCatVariant(cat.getVariant().getKey());
+            be.clearCats();
+            be.addCat(cat.getVariant().getKey());
             cat.discard();
         }
-
         ClientEffect.create(level,pos, ClientEffect.EffectType.CAT);
     }
 }

@@ -22,6 +22,7 @@
   "item.minecraft.splash_potion.effect.super_rotation_potion": "喷溅型超级旋转药水",
   "itemGroup.createbuttercat": "机械动力：黄油猫",
   "string.createbuttercat.full": "黄油已经贴满了！",
+  "string.createbuttercat.full_cat": "这里容不下更多猫猫了！",
   "string.createbuttercat.infinite": "无限供应",
   "string.createbuttercat.no_bread": "面包呢？",
   "string.createbuttercat.no_butter": "黄油呢？",

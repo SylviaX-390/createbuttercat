@@ -22,6 +22,7 @@
   "item.minecraft.splash_potion.effect.super_rotation_potion": "Super Rotation Splash Potion",
   "itemGroup.createbuttercat": "Create:Butter Cat",
   "string.createbuttercat.full": "Butter is full!",
+  "string.createbuttercat.full_cat": "Cat is full!",
   "string.createbuttercat.infinite": "Infinite Supply",
   "string.createbuttercat.no_bread": "Where is bread?",
   "string.createbuttercat.no_butter": "Where is butter?",
