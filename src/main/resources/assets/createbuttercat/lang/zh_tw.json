@@ -1,12 +1,18 @@
 {
   "block.createbuttercat.butter_cat_engine": "奶油貓引擎",
   "block.createbuttercat.cream": "鮮奶油",
+  "block.createbuttercat.butter_block": "奶油塊",
+  "block.createbuttercat.honey_butter_block": "蜂蜜奶油塊",
+  "block.createbuttercat.super_butter_block": "超級奶油塊",
+  "block.createbuttercat.in_super_butter_block": "未完成的超級奶油塊",
+
   "createbuttercat.ponder.butter_cat_engine.header": "讓奶油貓轉起來！",
   "createbuttercat.ponder.butter_cat_engine.text_1": "用栓繩把貓綁到傳動桿上。",
   "createbuttercat.ponder.butter_cat_engine.text_2": "這就是奶油貓引擎，現在來放塊麵包和奶油在貓身上。",
   "createbuttercat.ponder.butter_cat_engine.text_3": "奶油越多，速度越快，應力越大。",
   "createbuttercat.ponder.butter_cat_engine.text_4": "試試超級奶油？那就是永動機了。",
   "createbuttercat.ponder.butter_cat_engine.text_5": "別擔心，貓咪一直都在，只是他不認主了……",
+  "createbuttercat.ponder.butter_cat_engine.text_6": "四倍貓咪，四倍功率！",
   "effect.createbuttercat.rotation": "旋轉",
   "fluid.createbuttercat.cream": "鮮奶油",
   "item.createbuttercat.butter": "奶油",

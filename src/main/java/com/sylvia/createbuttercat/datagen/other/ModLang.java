@@ -15,6 +15,11 @@ public class ModLang extends LanguageProvider {
         add("itemGroup." + CreateButterCat.MODID, "Create:Butter Cat");
         add("block.createbuttercat.butter_cat_engine" , "Butter Cat Engine");
         add("block.createbuttercat.cream" , "Cream");
+        add("block.createbuttercat.butter_block" , "Butter Block");
+        add("block.createbuttercat.honey_butter_block" , "Honey Butter Block");
+        add("block.createbuttercat.super_butter_block" , "Super Butter Block");
+        add("block.createbuttercat.in_super_butter_block" , "Incomplete Super Butter Block");
+
         add("fluid.createbuttercat.cream" , "Cream");
         add("item.createbuttercat.cream_bucket" , "Cream Bucket");
         add("item.createbuttercat.butter" , "Butter");
@@ -45,6 +50,7 @@ public class ModLang extends LanguageProvider {
         add("createbuttercat.ponder.butter_cat_engine.text_3" , "The more butter you add, the greater its kinetic output.");
         add("createbuttercat.ponder.butter_cat_engine.text_4" , "And with super butter? Perpetual motion machine.");
         add("createbuttercat.ponder.butter_cat_engine.text_5" , "Don't worry, the cat is still here,it just doesn't recognize its owner anymore...");
+        add("createbuttercat.ponder.butter_cat_engine.text_6" , "Four cats, four times the power!");
 
 
     }

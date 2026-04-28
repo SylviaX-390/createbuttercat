@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "createbuttercat:block/honey_butter_block"
+  }
+}

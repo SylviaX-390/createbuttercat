@@ -25,6 +25,11 @@ public class ModCreativeModeTabs {
                         output.accept(ModItems.SUPER_BUTTER.get());
                         output.accept(ModFluids.CREAM.getBucket().get());
                         output.accept(ModBlocks.BUTTER_CAT_ENGINE.get());
+                        output.accept(ModBlocks.BUTTER_BLOCK.get());
+                        output.accept(ModBlocks.HONEY_BUTTER_BLOCK.get());
+                        output.accept(ModBlocks.SUPER_BUTTER_BLOCK.get());
+                        output.accept(ModBlocks.IN_SUPER_BUTTER_BLOCK.get());
+
 
                     }).build());
 

@@ -7,6 +7,8 @@ import com.sylvia.createbuttercat.block.ButterCatEngineBlockEntity;
 import com.sylvia.createbuttercat.register.ModBlocks;
 import com.sylvia.createbuttercat.register.ModItems;
 import net.createmod.catnip.math.Pointing;
+import net.createmod.ponder.api.element.ElementLink;
+import net.createmod.ponder.api.element.EntityElement;
 import net.createmod.ponder.api.scene.SceneBuilder;
 import net.createmod.ponder.api.scene.SceneBuildingUtil;
 import net.minecraft.core.BlockPos;
@@ -136,7 +138,7 @@ public class ModPonderScenes {
         scene.world().modifyBlockEntityNBT(util.select().position(stressPos), StressGaugeBlockEntity.class,
                 nbt -> nbt.putFloat("Value",0));
         scene.world().setBlock(enginePos, Blocks.AIR.defaultBlockState(), true);
-        scene.world().createEntity(world->{
+        ElementLink<EntityElement> catElementLink = scene.world().createEntity(world->{
             Cat c = EntityType.CAT.create(world);
             c.setPos(catDropPos.getBottomCenter());
             c.setYRot(180);
@@ -144,12 +146,35 @@ public class ModPonderScenes {
             c.setLying(true);
             return c;
         });
+
         scene.idle(20);
         scene.overlay().showText(50)
                 .text("Don't worry, the cat is still here,it just doesn't recognize its owner anymore...")
                 .placeNearTarget()
                 .pointAt(util.vector().topOf(catDropPos));
         scene.idle(60);
+
+        scene.addKeyframe();
+
+        scene.world().modifyEntity(catElementLink, Entity::discard);
+        scene.world().setBlock(catPos, Blocks.AIR.defaultBlockState(), true);
+
+        scene.idle(20);
+
+        scene.world().setBlock(enginePos, ModBlocks.BUTTER_CAT_ENGINE.getDefaultState().setValue(BlockStateProperties.HORIZONTAL_FACING,Direction.EAST), true);
+        scene.world().modifyBlockEntity(enginePos,ButterCatEngineBlockEntity.class,(be)->be.addCat(CatVariant.JELLIE));
+        scene.idle(20);
+        scene.world().modifyBlockEntity(enginePos,ButterCatEngineBlockEntity.class,(be)->be.addCat(CatVariant.CALICO));
+        scene.idle(10);
+        scene.world().modifyBlockEntity(enginePos,ButterCatEngineBlockEntity.class,(be)->be.addCat(CatVariant.SIAMESE));
+        scene.idle(10);
+        scene.world().modifyBlockEntity(enginePos,ButterCatEngineBlockEntity.class,(be)->be.addCat(CatVariant.WHITE));
+        scene.idle(90);
+        scene.overlay().showText(50)
+                .text("Four cats, four times the power!")
+                .placeNearTarget()
+                .pointAt(util.vector().topOf(catDropPos));
+
         scene.markAsFinished();
     }
 }

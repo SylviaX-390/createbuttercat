@@ -15,6 +15,11 @@ public class ModLangZHCN extends LanguageProvider {
         add("itemGroup." + CreateButterCat.MODID, "机械动力：黄油猫");
         add("block.createbuttercat.butter_cat_engine" , "黄油猫引擎");
         add("block.createbuttercat.cream" , "奶油");
+        add("block.createbuttercat.butter_block" , "黄油块");
+        add("block.createbuttercat.honey_butter_block" , "蜂蜜黄油块");
+        add("block.createbuttercat.super_butter_block" , "超级黄油块");
+        add("block.createbuttercat.in_super_butter_block" , "未完成的超级黄油块");
+
         add("fluid.createbuttercat.cream" , "奶油");
         add("item.createbuttercat.cream_bucket" , "奶油桶");
         add("item.createbuttercat.butter" , "黄油");
@@ -45,5 +50,6 @@ public class ModLangZHCN extends LanguageProvider {
         add("createbuttercat.ponder.butter_cat_engine.text_3" , "黄油越多，速度越快，应力越大");
         add("createbuttercat.ponder.butter_cat_engine.text_4" , "试试超级黄油？那就是永动机了");
         add("createbuttercat.ponder.butter_cat_engine.text_5" , "别担心，猫咪一直都在，只是他不认主了。。。");
+        add("createbuttercat.ponder.butter_cat_engine.text_6" , "四只猫咪，四倍功率！");
     }
 }

@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "createbuttercat:block/in_super_butter_block"
+  }
+}

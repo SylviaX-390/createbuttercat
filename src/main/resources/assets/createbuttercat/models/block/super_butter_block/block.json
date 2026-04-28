@@ -1,0 +1,7 @@
+{
+	"parent": "block/cube_all",
+	"textures": {
+		"all": "createbuttercat:block/super_butter_block",
+		"particle": "createbuttercat:block/super_butter_block"
+	}
+}
