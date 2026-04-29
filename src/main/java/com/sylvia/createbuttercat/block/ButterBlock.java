@@ -27,7 +27,8 @@ public class ButterBlock extends Block {
     @Override
     public void stepOn(Level level, BlockPos pos, BlockState state, Entity entity) {
         super.stepOn(level, pos, state, entity);
-        if(canEffect() && entity instanceof LivingEntity livingEntity && !(entity instanceof Player)){
+        if(canEffect() && entity instanceof LivingEntity livingEntity){
+            if(entity instanceof Player && !canEffectPlayer()) return;
             canEffect = false;
             livingEntity.addEffect(new MobEffectInstance(ModEffects.BUTTER_ROTATION_EFFECT, getDuration(), getAmplifier()));
         }
@@ -45,4 +46,5 @@ public class ButterBlock extends Block {
 
     public int getAmplifier(){return 2;}
     public int getDuration(){return 60;}
+    public boolean canEffectPlayer(){return false;}
 }

@@ -9,4 +9,6 @@ public class SuperButterBlock extends ButterBlock{
     public int getAmplifier() {return 5;}
     @Override
     public int getDuration() {return 20;}
+    @Override
+    public boolean canEffectPlayer(){return true;}
 }
